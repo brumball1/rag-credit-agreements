@@ -1,0 +1,28 @@
+# Virtual environments
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.class
+
+# IDE and system files
+.idea/
+.vscode/
+.DS_Store
+
+# Data and models (large files)
+data/
+models/
+outputs/
+logs/
+checkpoints/
+
+# Notebooks auto-saves
+.ipynb_checkpoints/
+
+# Build and test outputs
+build/
+dist/
+*.egg-info/
