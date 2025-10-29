@@ -1,0 +1,27 @@
+#core python and data handling
+numpy
+pandas
+pathlib
+tqdm
+jsonlines
+
+
+#pdf processing
+pdfplumber==0.11.4
+ftfy>=6.1
+unidecode>=1.3
+regex>=2023.0
+
+#NLP
+nltk>=3.8
+spacy>=3.7,<4
+scikit-learn>=1.3
+scipy>=1.11
+
+#ML/embedding models
+sentence-transformers==3.0.1
+torch>=2.1,<3
+
+
+#visualisation and statistics
+matplotlib>=3.7
