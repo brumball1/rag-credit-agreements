@@ -11,8 +11,6 @@ nltk.download("stopwords", quiet=True)
 def tokeniser(text: str):
     return re.findall(r"\b\w+\b", text.lower())
 
-
-
 #the idea is that the func will look in the processed data dir for files ending in .pages.jsonl, making a list of them.
 #if no files are present/don't have the *.pages.jsonl extension throw FileNotFoundError
 #loop through and open all files
@@ -47,7 +45,6 @@ def load_stopwords():
         print(f">>> No custom stopwords found in {legal_file} - only using NLTK stopwords <<<")
     return stops
 
-
 #creates a Counter
 #goes through the returned pairs yielded by iterate_pages(), taking text from each "page"
 #tokenises the text into individual words
@@ -56,14 +53,12 @@ def word_frequency(input_dir: Path, stops):
     freq = Counter()
     for name, pages in iterate_pages(input_dir):
         tokens = tokeniser(pages.get("text", ""))
-        filter_tokens = []
+        filtered_tokens = []
         for t in tokens:
-            if t not in stops and not t.isdigit():
-                filter_tokens.append(t)
-        freq.update(filter_tokens)
+            if t not in stops:
+                filtered_tokens.append(t)
+        freq.update(filtered_tokens)
     return freq
-
-
 
 def save_word_bank(frequency, output_dir):
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -73,8 +68,6 @@ def save_word_bank(frequency, output_dir):
         for word, count in frequency.most_common():
             f.write(f"{word},{count}\n")
     print(f"Saved word bank to {output_path}")
-
-
 
 if __name__ == "__main__":
     base_dir = Path(__file__).resolve().parents[2]
