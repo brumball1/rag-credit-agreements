@@ -1,13 +1,16 @@
 import json
 import re
 import nltk
+import spacy
 from pathlib import Path
 from collections import Counter
 from nltk.corpus import stopwords
 
-nltk.download("stopwords", quiet=True)
 
-#converts all text to lowecase and then extracts words
+nltk.download("stopwords", quiet=True)
+nlp = spacy.load("en_core_web_sm")
+
+#converts all text to lowercase and then extracts words
 def tokeniser(text: str):
     return re.findall(r"\b\w+\b", text.lower())
 
@@ -57,12 +60,20 @@ def word_frequency(input_dir: Path, stops):
         for t in tokens:
             if t not in stops:
                 filtered_tokens.append(t)
-        freq.update(filtered_tokens)
+        lemmas = lemmatise(filtered_tokens)
+        freq.update(lemmas)
     return freq
+
+def lemmatise(tokens):
+    doc = nlp(" ".join(tokens))
+    lemmas = []
+    for token in doc:
+        lemmas.append(token.lemma_)
+    return lemmas
 
 def save_word_bank(frequency, output_dir):
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "word_bank.csv"
+    output_path = output_dir / "word_bank.lemma.csv"
     with output_path.open("w", encoding="utf-8") as f:
         f.write("words,count\n")
         for word, count in frequency.most_common():
