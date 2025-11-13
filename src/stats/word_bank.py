@@ -96,9 +96,10 @@ def get_bigrams(input_dir: Path, stops, output_path: Path):
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as f:
-        f.write("Bi-gram, Count\n")
+        f.write("Bigram,Count\n")
         for (w1, w2), count in bigram_counter.most_common():
-            f.write(f"{w1} {w2}, {count}\n")
+            bigram_text = f"{w1} {w2}"
+            f.write(f"\"{bigram_text}\",{count}\n")
     print(f"Saved {len(bigram_counter)} bi-grams to {output_path}")
 
 
