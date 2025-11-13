@@ -96,7 +96,7 @@ def get_bigrams(input_dir: Path, stops, output_path: Path):
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as f:
-        f.write("Bi-gram, Count\n")
+        f.write("Bigram, Count\n")
         for (w1, w2), count in bigram_counter.most_common():
             f.write(f"{w1} {w2}, {count}\n")
     print(f"Saved {len(bigram_counter)} bi-grams to {output_path}")
@@ -116,9 +116,10 @@ def get_trigrams(input_dir: Path, stops, output_path: Path):
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as f:
-        f.write("Trigram, Count\n")
+        f.write("Trigram,Count\n")
         for (w1, w2, w3), count in trigram_counter.most_common():
-            f.write(f"{w1} {w2} {w3}, {count}\n")
+            trigram_text = f"{w1} {w2} {w3}"
+            f.write(f"\"{trigram_text}\",{count}\n")
     print(f"Saved {len(trigram_counter)} trigrams to {output_path}")
 
 #creates a Counter
