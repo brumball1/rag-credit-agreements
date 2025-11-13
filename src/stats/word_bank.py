@@ -5,7 +5,7 @@ import spacy
 from pathlib import Path
 from collections import Counter
 from nltk.corpus import stopwords
-from nltk import bigrams
+from nltk import bigrams, trigrams
 
 
 nltk.download("stopwords", quiet=True)
@@ -81,6 +81,27 @@ def load_stopwords():
         print(f">>> No custom stopwords found in {legal_file} - only using NLTK stopwords <<<")
     return stops
 
+
+def get_bigrams(input_dir: Path, stops, output_path: Path):
+    bigram_counter = Counter()
+    for name, pages in iterate_pages(input_dir):
+        tokens = tokeniser(pages.get("text", ""))
+
+        filtered_tokens = []
+        for t in tokens:
+            if t not in stops:
+                filtered_tokens.append(t)
+        for bg in bigrams(filtered_tokens):
+            bigram_counter[bg] += 1
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8") as f:
+        f.write("Bi-gram, Count\n")
+        for (w1, w2), count in bigram_counter.most_common():
+            f.write(f"{w1} {w2}, {count}\n")
+    print(f"Saved {len(bigram_counter)} bi-grams to {output_path}")
+
+
 #creates a Counter
 #goes through the returned pairs yielded by iterate_pages(), taking text from each "page"
 #tokenises the text into individual words
@@ -119,5 +140,7 @@ if __name__ == "__main__":
     derived_dir = base_dir / "data" / "derived"
     chunking(processed_dir, derived_dir / "page_chunks.jsonl")
     stops = load_stopwords()
+    get_bigrams(processed_dir, stops, derived_dir / "bigrams.csv")
+    #get_trigrams(processed_dir, stops, derived_dir / "trigrams.csv")
     freq = word_frequency(processed_dir, stops)
     save_word_bank(freq, derived_dir)
