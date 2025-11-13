@@ -26,3 +26,4 @@ checkpoints/
 build/
 dist/
 *.egg-info/
+.idea/
