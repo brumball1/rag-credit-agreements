@@ -1,13 +1,17 @@
 import json
 import re
 import nltk
+import spacy
 from pathlib import Path
 from collections import Counter
 from nltk.corpus import stopwords
+from nltk import bigrams, trigrams
+
 
 nltk.download("stopwords", quiet=True)
+nlp = spacy.load("en_core_web_sm")
 
-#converts all text to lowecase and then extracts words
+#converts all text to lowercase and then extracts words
 def tokeniser(text: str):
     return re.findall(r"\b\w+\b", text.lower())
 
@@ -28,6 +32,38 @@ def iterate_pages(input_dir: Path):
                     continue
                 yield fp.name, json.loads(line)
 
+def chunking(input_dir: Path, output_path: Path):
+    page_counter = 0
+    token_counter = 0
+    current_doc = None
+
+    with output_path.open("w", encoding="utf-8") as out:
+        for name, page in iterate_pages(input_dir):
+            id = name.replace(".pages_clean.pages.jsonl", "")
+            page_number = page.get("page")
+            text = page.get("text")
+            tokens = tokeniser(text)
+            num_tokens = len(tokens)
+
+            if id != current_doc:
+                token_counter = 0
+                current_doc = id
+
+            token_start = token_counter
+            token_end = token_counter + num_tokens
+
+            record = {"Document Name": id,
+                      "Page Number": page_number,
+                      "Token Count": num_tokens,
+                      "Token Start": token_start,
+                      "Token End": token_end}
+
+
+            out.write(json.dumps(record) + "\n")
+
+            token_counter =token_end
+            page_counter +=1
+
 def load_stopwords():
     #uses the English NLTK built-in stopwords
     stops = stopwords.words("english")
@@ -45,6 +81,49 @@ def load_stopwords():
         print(f">>> No custom stopwords found in {legal_file} - only using NLTK stopwords <<<")
     return stops
 
+
+def get_bigrams(input_dir: Path, stops, output_path: Path):
+    bigram_counter = Counter()
+    for name, pages in iterate_pages(input_dir):
+        tokens = tokeniser(pages.get("text", ""))
+
+        filtered_tokens = []
+        for t in tokens:
+            if t not in stops:
+                filtered_tokens.append(t)
+        for bg in bigrams(filtered_tokens):
+            bigram_counter[bg] += 1
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8") as f:
+        f.write("Bigram,Count\n")
+        for (w1, w2), count in bigram_counter.most_common():
+            bigram_text = f"{w1} {w2}"
+            f.write(f"\"{bigram_text}\",{count}\n")
+
+    print(f"Saved {len(bigram_counter)} bi-grams to {output_path}")
+
+
+def get_trigrams(input_dir: Path, stops, output_path: Path):
+    trigram_counter = Counter()
+    for name, pages in iterate_pages(input_dir):
+        tokens = tokeniser(pages.get("text", ""))
+
+        filtered_tokens = []
+        for t in tokens:
+            if t not in stops:
+                filtered_tokens.append(t)
+        for tg in trigrams(filtered_tokens):
+            trigram_counter[tg] += 1
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8") as f:
+        f.write("Trigram,Count\n")
+        for (w1, w2, w3), count in trigram_counter.most_common():
+            trigram_text = f"{w1} {w2} {w3}"
+            f.write(f"\"{trigram_text}\",{count}\n")
+    print(f"Saved {len(trigram_counter)} trigrams to {output_path}")
+
 #creates a Counter
 #goes through the returned pairs yielded by iterate_pages(), taking text from each "page"
 #tokenises the text into individual words
@@ -57,12 +136,20 @@ def word_frequency(input_dir: Path, stops):
         for t in tokens:
             if t not in stops:
                 filtered_tokens.append(t)
-        freq.update(filtered_tokens)
+        lemmas = lemmatise(filtered_tokens)
+        freq.update(lemmas)
     return freq
+
+def lemmatise(tokens):
+    doc = nlp(" ".join(tokens))
+    lemmas = []
+    for token in doc:
+        lemmas.append(token.lemma_)
+    return lemmas
 
 def save_word_bank(frequency, output_dir):
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / "word_bank.csv"
+    output_path = output_dir / "word_bank.lemma.csv"
     with output_path.open("w", encoding="utf-8") as f:
         f.write("words,count\n")
         for word, count in frequency.most_common():
@@ -73,6 +160,9 @@ if __name__ == "__main__":
     base_dir = Path(__file__).resolve().parents[2]
     processed_dir = base_dir / "data" / "processed"
     derived_dir = base_dir / "data" / "derived"
+    chunking(processed_dir, derived_dir / "page_chunks.jsonl")
     stops = load_stopwords()
+    get_bigrams(processed_dir, stops, derived_dir / "bigrams.csv")
+    get_trigrams(processed_dir, stops, derived_dir / "trigrams.csv")
     freq = word_frequency(processed_dir, stops)
     save_word_bank(freq, derived_dir)
