@@ -5,6 +5,7 @@ import spacy
 from pathlib import Path
 from collections import Counter
 from nltk.corpus import stopwords
+from nltk import bigrams
 
 
 nltk.download("stopwords", quiet=True)
@@ -30,6 +31,38 @@ def iterate_pages(input_dir: Path):
                 if not line:
                     continue
                 yield fp.name, json.loads(line)
+
+def chunking(input_dir: Path, output_path: Path):
+    page_counter = 0
+    token_counter = 0
+    current_doc = None
+
+    with output_path.open("w", encoding="utf-8") as out:
+        for name, page in iterate_pages(input_dir):
+            id = name.replace(".pages_clean.pages.jsonl", "")
+            page_number = page.get("page")
+            text = page.get("text")
+            tokens = tokeniser(text)
+            num_tokens = len(tokens)
+
+            if id != current_doc:
+                token_counter = 0
+                current_doc = id
+
+            token_start = token_counter
+            token_end = token_counter + num_tokens
+
+            record = {"Document Name": id,
+                      "Page Number": page_number,
+                      "Token Count": num_tokens,
+                      "Token Start": token_start,
+                      "Token End": token_end}
+
+
+            out.write(json.dumps(record) + "\n")
+
+            token_counter =token_end
+            page_counter +=1
 
 def load_stopwords():
     #uses the English NLTK built-in stopwords
@@ -84,6 +117,7 @@ if __name__ == "__main__":
     base_dir = Path(__file__).resolve().parents[2]
     processed_dir = base_dir / "data" / "processed"
     derived_dir = base_dir / "data" / "derived"
+    chunking(processed_dir, derived_dir / "page_chunks.jsonl")
     stops = load_stopwords()
     freq = word_frequency(processed_dir, stops)
     save_word_bank(freq, derived_dir)
