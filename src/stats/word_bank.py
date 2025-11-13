@@ -102,6 +102,25 @@ def get_bigrams(input_dir: Path, stops, output_path: Path):
     print(f"Saved {len(bigram_counter)} bi-grams to {output_path}")
 
 
+def get_trigrams(input_dir: Path, stops, output_path: Path):
+    trigram_counter = Counter()
+    for name, pages in iterate_pages(input_dir):
+        tokens = tokeniser(pages.get("text", ""))
+
+        filtered_tokens = []
+        for t in tokens:
+            if t not in stops:
+                filtered_tokens.append(t)
+        for tg in trigrams(filtered_tokens):
+            trigram_counter[tg] += 1
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8") as f:
+        f.write("Trigram, Count\n")
+        for (w1, w2, w3), count in trigram_counter.most_common():
+            f.write(f"{w1} {w2} {w3}, {count}\n")
+    print(f"Saved {len(trigram_counter)} trigrams to {output_path}")
+
 #creates a Counter
 #goes through the returned pairs yielded by iterate_pages(), taking text from each "page"
 #tokenises the text into individual words
@@ -141,6 +160,6 @@ if __name__ == "__main__":
     chunking(processed_dir, derived_dir / "page_chunks.jsonl")
     stops = load_stopwords()
     get_bigrams(processed_dir, stops, derived_dir / "bigrams.csv")
-    #get_trigrams(processed_dir, stops, derived_dir / "trigrams.csv")
+    get_trigrams(processed_dir, stops, derived_dir / "trigrams.csv")
     freq = word_frequency(processed_dir, stops)
     save_word_bank(freq, derived_dir)
