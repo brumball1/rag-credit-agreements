@@ -64,9 +64,38 @@ def top_20_words():
     plt.savefig("../../data/derived/figures/top_20_words_comparison_all.png", dpi=1800)
     plt.show()
 
+def zipf_plot_raw(top_n=500):
+    freqs = sorted(raw["count"], reverse=True)[:top_n]
+    ranks = np.arange(1, top_n + 1)
+    plt.figure(figsize=(8, 6))
+    plt.loglog(ranks, freqs, marker=".", linestyle="none")
+    plt.title("Zipf Plot for Raw Token Frequencies")
+    plt.xlabel("Rank")
+    plt.ylabel("Frequency")
+    plt.grid(True, which="both", linestyle="--", alpha=0.7)
+    plt.tight_layout()
+    plt.savefig("../../data/derived/figures/zipf_raw_top500.png", dpi=600)
+    plt.show()
+
+
+def zipf_plot_lemmatised(top_n=500):
+    freqs = sorted(lemma["count"], reverse=True)[:top_n]
+    ranks = np.arange(1, top_n + 1)
+    plt.figure(figsize=(8, 6))
+    plt.loglog(ranks, freqs, marker=".", linestyle="none")
+    plt.title("Zipf Plot for Lemma Token Frequencies")
+    plt.xlabel("Rank")
+    plt.ylabel("Frequency")
+    plt.grid(True, which="both", linestyle="--", alpha=0.7)
+    plt.tight_layout()
+    plt.savefig("../../data/derived/figures/zipf_lemma_top500.png", dpi=600)
+    plt.show()
+
 if __name__ == "__main__":
     bar_chart()
     pie_chart()
     top_20_words()
+    zipf_plot_raw()
+    zipf_plot_lemmatised()
     print("All plots generated and saved to data/derived/figures/")
 
