@@ -122,7 +122,6 @@ def zipf_plot_with_fit(top_n=500):
     freqs = np.array(sorted(lemma["count"], reverse=True)[:top_n])
     ranks = np.arange(1, top_n + 1)
 
-    # log transform for linear fitting
     log_ranks = np.log(ranks)
     log_freqs = np.log(freqs)
 
