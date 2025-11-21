@@ -117,15 +117,59 @@ def zipf_plot_lemmatised(top_n=500):
     plt.savefig("data/derived/figures/zipf_lemma_top500.png", dpi=600)
     plt.show()
 
+def zipf_plot_with_fit(top_n=500):
+    # get top N frequencies
+    freqs = np.array(sorted(lemma["count"], reverse=True)[:top_n])
+    ranks = np.arange(1, top_n + 1)
+
+    # log transform for linear fitting
+    log_ranks = np.log(ranks)
+    log_freqs = np.log(freqs)
+
+    # fit straight line in log space
+    slope, intercept = np.polyfit(log_ranks, log_freqs, 1)
+
+    # reconstruct fitted values
+    fitted = np.exp(intercept + slope * log_ranks)
+
+    # plot data
+    plt.figure(figsize=(8, 6))
+    plt.loglog(ranks, freqs, marker=".", linestyle="none", label="Lemma data")
+    plt.loglog(ranks, fitted, linestyle="solid", label="Fitted power law")
+
+    plt.title("Zipf Plot with Fitted Power Law (Lemma)")
+    plt.xlabel("Rank")
+    plt.ylabel("Frequency")
+    plt.grid(True, which="both", linestyle="--", alpha=0.7)
+
+    # write equation on the plot
+    eqn_text = f"f = a * r^(b)\na = {np.exp(intercept):.2f}\nb = {slope:.2f}"
+    plt.text(
+        0.05, 0.05,
+        eqn_text,
+        transform=plt.gca().transAxes,
+        fontsize=10,
+        bbox=dict(facecolor="white", alpha=0.7)
+    )
+
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("data/derived/figures/zipf_lemma_with_fit.png", dpi=800)
+    plt.show()
+
+
+
+
 
 
 if __name__ == "__main__":
-    bar_chart()
-    pie_chart()
-    top_20_words()
-    zipf_plot_raw()
-    zipf_plot_lemmatised()
-    log_zipf_plot_raw()
-    log_zipf_plot_lemmatised()
+    #bar_chart()
+    #pie_chart()
+    #top_20_words()
+    #zipf_plot_raw()
+    #zipf_plot_lemmatised()
+    #log_zipf_plot_raw()
+    #log_zipf_plot_lemmatised()
+    zipf_plot_with_fit()
     print("All plots generated and saved to data/derived/figures/")
 

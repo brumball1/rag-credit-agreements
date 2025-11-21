@@ -104,6 +104,30 @@ def get_bigrams(input_dir: Path, stops, output_path: Path):
     print(f"Saved {len(bigram_counter)} bi-grams to {output_path}")
 
 
+def get_bigrams_per_page(input_dir: Path, stops, output_path: Path):
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with output_path.open("w", encoding="utf-8") as f:
+        f.write("Document, Page, Bigram, Count\n")
+
+        for name, page in iterate_pages(input_dir):
+            doc_id = name.replace(".pages_clean.pages.jsonl", "")
+            page_number = page.get("page")
+            tokens = tokeniser(page.get("text", ""))
+
+            filtered_tokens = []
+            for t in tokens:
+                if t not in stops:
+                    filtered_tokens.append(t)
+
+            bigrams_per_page = Counter(bigrams(filtered_tokens))
+
+
+            for (w1, w2), count in bigrams_per_page.items():
+                bigram_text = f"{w1} {w2}"
+                f.write(f"\"{doc_id}\",{page_number},\"{bigram_text}\",{count}\n")
+
+
 def get_trigrams(input_dir: Path, stops, output_path: Path):
     trigram_counter = Counter()
     for name, pages in iterate_pages(input_dir):
@@ -123,6 +147,27 @@ def get_trigrams(input_dir: Path, stops, output_path: Path):
             trigram_text = f"{w1} {w2} {w3}"
             f.write(f"\"{trigram_text}\",{count}\n")
     print(f"Saved {len(trigram_counter)} trigrams to {output_path}")
+
+
+def get_trigrams_per_page(input_dir: Path, stops, output_path: Path):
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8") as f:
+        f.write("Document, Page, Trigram, Count\n")
+        for name, pages in iterate_pages(input_dir):
+            doc_id = name.replace(".pages_clean.pages.jsonl", "")
+            page_number = pages.get("page")
+            tokens = tokeniser(pages.get("text", ""))
+            filtered_tokens = []
+            for t in tokens:
+                if t not in stops:
+                    filtered_tokens.append(t)
+
+            trigrams_per_page = Counter(trigrams(filtered_tokens))
+            for (w1, w2, w3), count in trigrams_per_page.most_common():
+                trigram_text = f"{w1} {w2} {w3}"
+                f.write(f"\"{doc_id}\",{page_number},\"{trigram_text}\",{count}\n")
+
+
 
 #creates a Counter
 #goes through the returned pairs yielded by iterate_pages(), taking text from each "page"
@@ -163,6 +208,8 @@ if __name__ == "__main__":
     chunking(processed_dir, derived_dir / "page_chunks.jsonl")
     stops = load_stopwords()
     get_bigrams(processed_dir, stops, derived_dir / "bigrams.csv")
+    get_bigrams_per_page(processed_dir, stops, derived_dir / "bigrams_per_page.csv")
+    get_trigrams_per_page(processed_dir, stops, derived_dir / "trigrams_per_page.csv")
     get_trigrams(processed_dir, stops, derived_dir / "trigrams.csv")
     freq = word_frequency(processed_dir, stops)
     save_word_bank(freq, derived_dir)
