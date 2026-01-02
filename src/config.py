@@ -1,5 +1,4 @@
 class PipelineConfig:
-    def __init__(self, chunking="page", embedding="mpnet", agentic=False):
+    def __init__(self, chunking="paragraph", embedding="all-mpnet-base-v2"):
         self.chunking = chunking
         self.embedding = embedding
-        self.agentic = agentic

@@ -1,19 +1,12 @@
 import json
 from pathlib import Path
-from typing import Iterator, Tuple, Dict, Any
 
 from stats.tokeniser import tokeniser
 from extract.page_reader import iterate_pages
 
 
 def chunk_pages(input_dir: Path, output_path: Path) -> None:
-    """
-    Build per page token metadata:
-      - document id
-      - page number
-      - token count
-      - token start and end within that document.
-    """
+
     page_counter = 0
     token_counter = 0
     current_doc = None
@@ -45,7 +38,6 @@ def chunk_pages(input_dir: Path, output_path: Path) -> None:
             }
 
             out.write(json.dumps(record) + "\n")
-
             token_counter = token_end
             page_counter += 1
 

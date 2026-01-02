@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
+#from sklearn.metrics.pairwise import cosine_similarity
 from pprint import pprint as pp
 
 model = SentenceTransformer("all-mpnet-base-v2")
