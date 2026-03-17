@@ -2,7 +2,12 @@ import json
 import numpy as np
 from pathlib import Path
 from glob import glob
+import csv
+from datetime import datetime
 
+"""
+This code is optional. It is used to evaluate the performance of the triplets before training the model.
+"""
 #   source .venv/bin/activate && python -m src.training.evaluate_pairs
 
 def load_triplets(path: Path) -> list[dict]:
@@ -37,21 +42,21 @@ def compute_metrics(triplets: list[dict]) -> dict:
     n = len(ranks)
 
     return {
-        "n_triplets":       len(triplets),
-        "n_scored":         n,
+        "n_triplets": len(triplets),
+        "n_scored": n,
         # retrieval quality 
-        "MRR":              float(np.mean(1.0 / ranks)) if n else 0,
-        "Recall@1":         float(np.mean(ranks <= 1)) if n else 0,
-        "Recall@5":         float(np.mean(ranks <= 5)) if n else 0,
-        "Recall@10":        float(np.mean(ranks <= 10)) if n else 0,
-        "Mean rank":        float(np.mean(ranks)) if n else 0,
-        "Median rank":      float(np.median(ranks)) if n else 0,
+        "MRR": float(np.mean(1.0 / ranks)) if n else 0,
+        "Recall@1": float(np.mean(ranks <= 1)) if n else 0,
+        "Recall@5": float(np.mean(ranks <= 5)) if n else 0,
+        "Recall@10": float(np.mean(ranks <= 10)) if n else 0,
+        "Mean rank": float(np.mean(ranks)) if n else 0,
+        "Median rank": float(np.median(ranks)) if n else 0,
         # hard negative quality 
-        "Mean margin":      float(np.mean(margins)) if len(margins) else 0,
-        "Median margin":    float(np.median(margins)) if len(margins) else 0,
-        "% margin > 0":     float(np.mean(margins > 0) * 100) if len(margins) else 0,
+        "Mean margin": float(np.mean(margins)) if len(margins) else 0,
+        "Median margin": float(np.median(margins)) if len(margins) else 0,
+        "% margin > 0": float(np.mean(margins > 0) * 100) if len(margins) else 0,
         # positive score distribution 
-        "Mean pos score":   float(np.mean(positive_scores)) if len(positive_scores) else 0,
+        "Mean pos score": float(np.mean(positive_scores)) if len(positive_scores) else 0,
         "Median pos score": float(np.median(positive_scores)) if len(positive_scores) else 0,
     }
 
@@ -60,7 +65,7 @@ def print_comparison_table(results: dict[str, dict]):
     models = list(results.keys())
     col_width = 28
 
-    # header
+    #stuff to print nice in terminal
     print("\n" + "=" * (22 + col_width * len(models)))
     print(f"{'Metric':<22}" + "".join(f"{m:>{col_width}}" for m in models))
     print("=" * (22 + col_width * len(models)))
@@ -101,14 +106,21 @@ def print_comparison_table(results: dict[str, dict]):
 
 
 if __name__ == "__main__":
-    import csv
-    from datetime import datetime
-
+    
     base_path = Path(__file__).resolve().parents[2]
     derived_path = base_path / "data" / "derived"
 
     # auto-discover all triplet files
-    triplet_files = sorted(derived_path.glob("triplets__*.jsonl"))
+    all_files = sorted(derived_path.glob("triplets__*.jsonl"))
+    
+    # Filter to only keep exactly what we want to compare for the presentation
+    target_files = [
+        "triplets__gemma3-12b__e5-base-v2__allchunks.jsonl",
+        "triplets__gemma3-12b__e5-base-v2__allchunks__window2-15.jsonl",
+        "triplets__gemma3-12b__e5-base-v2__allchunks__threshold.jsonl",
+        "triplets__gemma3-12b__all-mpnet__2137chunks__6686t.jsonl"
+    ]
+    triplet_files = [f for f in all_files if f.name in target_files]
 
     if not triplet_files:
         print("No triplet files found in data/derived/")

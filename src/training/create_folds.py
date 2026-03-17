@@ -80,7 +80,11 @@ def create_folds(triplets_file: Path, output_dir: Path, chunks_file: Path, seed:
 
 
 if __name__ == "__main__":
-    
+    """
+      Idea is that using the parser we can change the number of folds, the seed, and the output directory without 
+      having to rewrite the code.
+
+    """
 
     parser = argparse.ArgumentParser(description="Leave-one-document-out fold creation")
     parser.add_argument("triplets_file", type=str)

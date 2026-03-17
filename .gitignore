@@ -13,9 +13,21 @@ __pycache__/
 .DS_Store
 
 # Data and models (large files)
-data/
+data/*
+!data/derived/
+data/derived/*
+!data/derived/pairs_cache__gemma3-12b__allchunks.jsonl
+!data/derived/paragraph_chunks.jsonl
 models/
 outputs/
+**/weights_*/
+**/weights_multiple_negatives_ranking/
+**/weights_triplet/
+*.safetensors
+*.ckpt
+*.bin
+*.pth
+
 logs/
 checkpoints/
 
