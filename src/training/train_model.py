@@ -10,13 +10,15 @@ from sentence_transformers.evaluation import TripletEvaluator
 # source .venv/bin/activate && python -m src.training.train_model data/derived/training/gemma3-12b__e5-base-v2__allchunks__window2-15/fold_1 --model_name intfloat/e5-base-v2 --loss multiple_negatives_ranking --epochs 1 --batch_size 4 --learning_rate 2e-5
 # source .venv/bin/activate && python -m src.training.train_model data/derived/training/gemma3-12b__e5-base-v2__allchunks__window2-15/fold_1 --model_name intfloat/e5-base-v2 --loss triplet --epochs 1 --batch_size 4 --learning_rate 2e-5
 
+# source .venv/bin/activate && export PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 && caffeinate python -m src.training.train_model data/derived/training/gemma3-12b__e5-base-v2__allchunks__threshold/fold_1 --model_name intfloat/e5-base-v2 --loss multiple_negatives_ranking --epochs 1 --batch_size 4 --learning_rate 2e-5
+# source .venv/bin/activate && export PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 && caffeinate python -m src.training.train_model data/derived/training/gemma3-12b__e5-base-v2__allchunks__threshold/fold_1 --model_name intfloat/e5-base-v2 --loss triplet --epochs 1 --batch_size 4 --learning_rate 2e-5
+
 
 def load_triplets(file_path: Path):
     examples = []
     with file_path.open("r", encoding="utf-8") as f:
         for line in f:
             t = json.loads(line)
-            # InputExample expects lists of texts: [query, positive, negative]
             examples.append(InputExample(texts=[t["query"], t["positive"], t["negative"]]))
     return examples
 
@@ -45,17 +47,22 @@ def train_model(
 
     print(f"Configuring Loss Function: {loss_type}")
     if loss_type == "triplet":
-        train_loss = losses.TripletLoss(model=model)
+        # Using Cosine distance and a cosine margin (0.2) to compare evenly against MNRL
+        train_loss = losses.TripletLoss(
+            model=model, 
+            distance_metric=losses.TripletDistanceMetric.COSINE, 
+            triplet_margin=0.2
+        )
     elif loss_type == "multiple_negatives_ranking":
         train_loss = losses.MultipleNegativesRankingLoss(model=model)
     else:
         raise ValueError(f"Unknown loss type: {loss_type}")
 
-    # Output directory for saving model
+    # where we are going to save the model after training
     output_model_dir = fold_dir / f"weights_{loss_type}"
     output_model_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"Starting Training for {epochs} epochs...")
+    print(f" Training {epochs} epochs")
     model.fit(
         train_objectives=[(train_dataloader, train_loss)],
         evaluator=val_evaluator,
@@ -67,9 +74,13 @@ def train_model(
         show_progress_bar=True
     )
     
-    print(f"Training Complete. Model saved to {output_model_dir}")
+    print(f"Training finished. Model saved to {output_model_dir}")
 
 if __name__ == "__main__":
+    """
+    Idea is that using the parser we can train the model on different datasets and with different loss functions without 
+    having to rewrite the code.
+    """
     parser = argparse.ArgumentParser(description="Train dense embedding model using sentence-transformers.")
     parser.add_argument("fold_dir", type=str, help="Path to the directory containing train.jsonl and val.jsonl")
     parser.add_argument("--model_name", type=str, default="intfloat/e5-base-v2", help="HuggingFace model name or path")

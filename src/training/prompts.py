@@ -1,4 +1,7 @@
-#these prompts will be sent to Ollama and they will be used to create synthetic query chunk pairs
+"""Prompts for generating training data.
+they are used in src.build_training_triplets.py to create the triplets for training the model in src.training.train_model.py
+"""
+
 
 POSITIVE_QUERY_PROMPT = """You are helping create training data for a search system over credit agreements (loan documents).
 

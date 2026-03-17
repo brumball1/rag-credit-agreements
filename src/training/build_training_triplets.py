@@ -17,9 +17,9 @@ N_POSITIVE_QUERIES = 1
 N_HARD_NEGATIVES = 2
 N_SAMPLE_CHUNKS = None  # 100, 1000, or None (None = all chunks)
 
-NEGATIVE_STRATEGY    = "random_window"  # "top_k" or "random_window"
-NEGATIVE_WINDOW_MIN  = 2               # don't take rank 1 (risk of false negatives)
-NEGATIVE_WINDOW_MAX  = 15              # upper bound of sampling window
+NEGATIVE_STRATEGY    = "threshold" # "top_k", "random_window", or "threshold"
+NEGATIVE_WINDOW_MIN  = 2 # don't take rank 1 (risk of false negatives)
+NEGATIVE_WINDOW_MAX  = 15 # upper bound of sampling window
 
 #EMBEDDING_MODEL = "all-mpnet-base-v2"
 EMBEDDING_MODEL = "intfloat/e5-base-v2"
@@ -119,11 +119,40 @@ def generate_dense_triplets(positive_pairs: list[dict],
         candidate_indices = [idx for idx in ranked_indices if corpus_texts[idx] != pair["ground_truth"]]
 
         if strategy == "random_window":
-            # sample randomly from within the rank window (0-indexed into candidates)
-            lo = min(window_min - 1, len(candidate_indices) - 1)
-            hi = min(window_max - 1, len(candidate_indices) - 1)
-            pool = candidate_indices[lo:hi + 1]
+            low = min(window_min - 1, len(candidate_indices) - 1)
+            high = min(window_max - 1, len(candidate_indices) - 1)
+            pool = candidate_indices[low:high + 1]
             chosen = np.random.choice(pool, size=min(top_k, len(pool)), replace=False)
+        elif strategy == "threshold":
+            # experiment w values
+            relative_margin = 0.95
+            absolute_max = 0.80
+            absolute_min = 0.20
+            
+            pool = []
+            for idx in candidate_indices:
+                neg_score = similarities[i][idx]
+                if (neg_score <= relative_margin * positive_score) and (absolute_min <= neg_score <= absolute_max):
+                    pool.append(idx)
+            
+            # if this filter is too strict and we get no negatives, fallback to slightly wider margins
+            if len(pool) < top_k:
+                print(f"Only found {len(pool)} negatives within thresholds. Relaxing absolute_min to 0.0")
+                pool = []
+                for idx in candidate_indices:
+                    neg_score = similarities[i][idx]
+                    if neg_score <= relative_margin * positive_score and neg_score <= absolute_max:
+                        pool.append(idx)
+            
+            # if still not enough, fallback to window behavior but print it
+            if len(pool) < top_k:
+                print(f"Still not enough negatives for Query {i+1}. Falling back to default random_window.")
+                low = min(window_min - 1, len(candidate_indices) - 1)
+                high = min(window_max - 1, len(candidate_indices) - 1)
+                pool = candidate_indices[low:high + 1]
+            
+            chosen = np.random.choice(pool, size=min(top_k, len(pool)), replace=False)
+
         else:
             # top_k: take the most similar non-positive chunks in order
             chosen = candidate_indices[:top_k]
@@ -153,23 +182,28 @@ if __name__ == "__main__":
     base_path = Path(__file__).resolve().parents[2]
     data_path = base_path / "data" / "derived" / "paragraph_chunks.jsonl"
 
-    # file naming
+    # stuff for file naming
     llm_tag = DEFAULT_MODEL.replace(":", "-")
     embed_tag = EMBEDDING_MODEL.split("/")[-1]  # handles org/model-name format
     chunks_tag = str(N_SAMPLE_CHUNKS) if N_SAMPLE_CHUNKS is not None else "all"
 
-    # stage 1 cache: positive pairs are expensive (LLM), save once and reuse
+    # stage 1 cache: generating pairs is expensive, so we cache it
     pairs_cache_path = base_path / "data" / "derived" / f"pairs_cache__{llm_tag}__{chunks_tag}chunks.jsonl"
 
     # stage 2 output: named after embedding model + strategy so each combo is unique
-    strategy_tag = f"__window{NEGATIVE_WINDOW_MIN}-{NEGATIVE_WINDOW_MAX}" if NEGATIVE_STRATEGY == "random_window" else ""
+    if NEGATIVE_STRATEGY == "random_window":
+        strategy_tag = f"__window{NEGATIVE_WINDOW_MIN}-{NEGATIVE_WINDOW_MAX}"
+    elif NEGATIVE_STRATEGY == "threshold":
+        strategy_tag = "__threshold"
+    else:
+        strategy_tag = ""
     output_path = base_path / "data" / "derived" / f"triplets__{llm_tag}__{embed_tag}__{chunks_tag}chunks{strategy_tag}.jsonl"
 
     # load corpus (always needed for hard negative mining)
     all_chunks = load_chunks(data_path)
     corpus_texts = [c["text"] for c in all_chunks]
 
-    # generate positive pairs via LLM (skip if cache exists)
+    # generate positive pairs via LLM (skip now if cache exists)
     if pairs_cache_path.exists():
         print(f"[Stage 1] Cache found — loading pairs from {pairs_cache_path.name}")
         pairs = []

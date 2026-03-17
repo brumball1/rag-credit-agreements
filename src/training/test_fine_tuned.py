@@ -6,6 +6,7 @@ from sentence_transformers import SentenceTransformer
 from src.training.evaluate_pairs import compute_metrics, print_comparison_table
 
 # source .venv/bin/activate && python -m src.training.test_fine_tuned data/derived/training/gemma3-12b__e5-base-v2__allchunks__window2-15/fold_1
+# source .venv/bin/activate && python -m src.training.test_fine_tuned data/derived/training/gemma3-12b__e5-base-v2__allchunks__threshold/fold_1
 
 def load_data(fold_dir: Path, chunks_path: Path):
     test_triplets = []
@@ -73,6 +74,8 @@ if __name__ == "__main__":
     chunks_path = Path(args.chunks).resolve()
     
     ft_model_path = fold_dir / "weights_multiple_negatives_ranking"
+    ft_model_path = fold_dir / "weights_triplet"
+
     
     if not ft_model_path.exists():
         print(f"Fine-tuned model not found at {ft_model_path}")
@@ -82,7 +85,7 @@ if __name__ == "__main__":
     
     results = {}
     
-    # Evaluate Base Model
+    # eval base model
     results["Base Model"] = evaluate_model(args.base_model, test_triplets, corpus_texts, "Base Model")
     
     # Evaluate Fine-Tuned Model
