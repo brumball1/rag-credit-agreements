@@ -73,8 +73,8 @@ if __name__ == "__main__":
     fold_dir = Path(args.fold_dir).resolve()
     chunks_path = Path(args.chunks).resolve()
     
-    ft_model_path = fold_dir / "weights_multiple_negatives_ranking"
-    ft_model_path = fold_dir / "weights_triplet"
+    ft_model_path = fold_dir / "weights_multiple_negatives_ranking_best"
+    #ft_model_path = fold_dir / "weights_triplet"
 
     
     if not ft_model_path.exists():
@@ -91,5 +91,5 @@ if __name__ == "__main__":
     # Evaluate Fine-Tuned Model
     results["Fine-Tuned Model"] = evaluate_model(str(ft_model_path), test_triplets, corpus_texts, "Fine-Tuned Model")
     
-    print("\n\n======== TEST SET EVALUATION RESULTS (Fold 1) ========\n")
+    print(f"\n\n======== TEST SET EVALUATION RESULTS ({fold_dir.name}) ========\n")
     print_comparison_table(results)
