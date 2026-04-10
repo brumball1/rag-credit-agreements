@@ -71,28 +71,28 @@ if __name__ == "__main__":
     parser.add_argument("--chunks", type=str, default="data/derived/paragraph_chunks.jsonl")
     parser.add_argument("--model_path", type=str, default=None, help="Path to fine-tuned weights, overrides the default fold_dir/weights_multiple_negatives_ranking_best")
     args = parser.parse_args()
-    
+
     fold_dir = Path(args.fold_dir).resolve()
     chunks_path = Path(args.chunks).resolve()
-    
+
     if args.model_path:
         ft_model_path = Path(args.model_path).resolve()
     else:
         ft_model_path = fold_dir / "weights_multiple_negatives_ranking_best"
-    
+
     if not ft_model_path.exists():
         print(f"Fine-tuned model not found at {ft_model_path}")
         exit(1)
-        
+
     test_triplets, corpus_texts = load_data(fold_dir, chunks_path)
-    
+
     results = {}
-    
+
     # eval base model
     results["Base Model"] = evaluate_model(args.base_model, test_triplets, corpus_texts, "Base Model")
-    
+
     # Evaluate Fine-Tuned Model
     results["Fine-Tuned Model"] = evaluate_model(str(ft_model_path), test_triplets, corpus_texts, "Fine-Tuned Model")
-    
+
     print(f"\n\n======== TEST SET EVALUATION RESULTS ({fold_dir.name}) ========\n")
     print_comparison_table(results)
