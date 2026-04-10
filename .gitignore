@@ -16,8 +16,14 @@ __pycache__/
 data/*
 !data/derived/
 data/derived/*
-!data/derived/pairs_cache__gemma3-12b__allchunks.jsonl
+!data/derived/section_chunks.jsonl
 !data/derived/paragraph_chunks.jsonl
+!data/derived/pairs_cache__gemma3-12b__allchunks.jsonl
+!data/derived/pairs_cache__gemma3-12b__section_chunks__all__4q.jsonl
+!data/derived/triplets__gemma3-12b__e5-base-v2__allchunks__window2-15.jsonl
+!data/derived/triplets__gemma3-12b__gte-modernbert-base__allchunks__window2-15.jsonl
+!data/derived/triplets__gemma3-12b__e5-base-v2__section_chunks__all__dense__bm25__window3-20.jsonl
+!data/derived/triplets__gemma3-12b__gte-modernbert-base__section_chunks__all__dense__bm25__window3-20.jsonl
 models/
 outputs/
 **/weights_*/
