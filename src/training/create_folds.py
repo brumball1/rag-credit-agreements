@@ -39,11 +39,18 @@ def create_folds(triplets_file: Path, output_dir: Path, chunks_file: Path, seed:
                 if neg_doc_id != test_doc:
                     train_pool.append(t)
 
-        random.shuffle(train_pool)
-
-        split_idx = int(0.9 * len(train_pool))
-        train_triplets = train_pool[:split_idx]
-        val_triplets = train_pool[split_idx:]
+        # Split by unique positive chunk to avoid leakage.
+        # Even a query-level split leaks: the same chunk can appear with many
+        # different queries, some in train and some in val. After training,
+        # the model learns the chunk's embedding so well that any unseen query
+        # pointing to that same chunk trivially retrieves it (seen at val = 1.0).
+        # Fix: a chunk either goes entirely to train or entirely to val.
+        unique_chunks = list({t["positive"] for t in train_pool})
+        random.shuffle(unique_chunks)
+        split_idx = int(0.9 * len(unique_chunks))
+        train_chunk_set = set(unique_chunks[:split_idx])
+        train_triplets = [t for t in train_pool if t["positive"] in train_chunk_set]
+        val_triplets   = [t for t in train_pool if t["positive"] not in train_chunk_set]
 
         # section to verify no test doc leakage
         train_docs = set(t["doc_id"] for t in train_triplets)

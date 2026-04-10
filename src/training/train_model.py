@@ -8,13 +8,6 @@ from pathlib import Path
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer, InputExample, losses
 from torch.utils.data import DataLoader
-from sentence_transformers.evaluation import TripletEvaluator
-
-# source .venv/bin/activate && python -m src.training.train_model data/derived/training/gemma3-12b__e5-base-v2__allchunks__window2-15/fold_1 --model_name intfloat/e5-base-v2 --loss multiple_negatives_ranking --epochs 1 --batch_size 4 --learning_rate 2e-5
-# source .venv/bin/activate && python -m src.training.train_model data/derived/training/gemma3-12b__e5-base-v2__allchunks__window2-15/fold_1 --model_name intfloat/e5-base-v2 --loss triplet --epochs 1 --batch_size 4 --learning_rate 2e-5
-
-# source .venv/bin/activate && export PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 && caffeinate python -m src.training.train_model data/derived/training/gemma3-12b__e5-base-v2__allchunks__window2-15/fold_1 --model_name intfloat/e5-base-v2 --loss multiple_negatives_ranking --batch_size 16 --learning_rate 2e-5
-
 
 def load_triplets(file_path: Path):
     examples = []
@@ -24,7 +17,6 @@ def load_triplets(file_path: Path):
             examples.append(InputExample(texts=[t["query"], t["positive"], t["negative"]]))
     return examples
 
-#runs on val set to get metrics
 def compute_recall_at_10(model, val_triplets_raw, corpus_texts):
     corpus_embeddings = model.encode(corpus_texts, batch_size=32, normalize_embeddings=True, show_progress_bar=False)
     queries = [t["query"] for t in val_triplets_raw]
@@ -32,16 +24,13 @@ def compute_recall_at_10(model, val_triplets_raw, corpus_texts):
     similarities = query_embeddings @ corpus_embeddings.T
 
     ranks = []
-    margins = []
     for i, t in enumerate(val_triplets_raw):
         try:
             pos_idx = corpus_texts.index(t["positive"])
-            neg_idx = corpus_texts.index(t["negative"])
             pos_score = float(similarities[i, pos_idx])
-            neg_score = float(similarities[i, neg_idx])
+            # Rank is number of scores higher than pos_score + 1
             rank = int(np.sum(similarities[i] > pos_score)) + 1
             ranks.append(rank)
-            margins.append(pos_score - neg_score)
         except ValueError:
             continue
 
@@ -52,11 +41,12 @@ def compute_recall_at_10(model, val_triplets_raw, corpus_texts):
         "Recall@1": float(np.mean(ranks <= 1))  if n else 0,
         "MRR": float(np.mean(1.0 / ranks))  if n else 0,
         "Mean rank": float(np.mean(ranks)) if n else 0,
+        "ranks_used": ranks
     }
-
 
 def train_model(
     fold_dir: Path,
+    corpus_path: Path,
     model_name: str,
     loss_type: str,
     batch_size: int = 16,
@@ -64,6 +54,7 @@ def train_model(
     warmup_steps: int = 120,
     max_epochs: int = 100,
     patience: int = 3,
+    max_grad_norm: float = 1.0,
 ):
     print(f"Loading Model: {model_name}")
     model = SentenceTransformer(model_name)
@@ -79,7 +70,7 @@ def train_model(
             val_triplets_raw.append(json.loads(line))
 
     # Load corpus for ranking evaluation
-    corpus_path = fold_dir.parents[2] / "paragraph_chunks.jsonl"
+    print(f"Loading Corpus from {corpus_path}")
     corpus_texts = []
     with corpus_path.open("r", encoding="utf-8") as f:
         for line in f:
@@ -87,7 +78,6 @@ def train_model(
 
     print(f"Configuring Loss Function: {loss_type}")
     if loss_type == "triplet":
-        # Using Cosine distance and a cosine margin (0.2) to compare evenly against MNRL
         train_loss = losses.TripletLoss(
             model=model,
             distance_metric=losses.TripletDistanceMetric.COSINE,
@@ -98,14 +88,13 @@ def train_model(
     else:
         raise ValueError(f"Unknown loss type: {loss_type}")
 
-    # where we are going to save the model after training
     output_model_dir = fold_dir / f"weights_{loss_type}"
     best_checkpoint_dir = fold_dir / f"weights_{loss_type}_best"
     output_model_dir.mkdir(parents=True, exist_ok=True)
 
     best_recall = -1.0
     patience_counter = 0
-    history = []  # store metrics each epoch
+    history = []
 
     print(f"\nStarting training (max {max_epochs} epochs, patience={patience})\n")
 
@@ -119,22 +108,26 @@ def train_model(
             epochs=1,
             warmup_steps=warmup_steps,
             optimizer_params={"lr": learning_rate},
+            max_grad_norm=max_grad_norm,
             show_progress_bar=True
         )
 
-        # Evaluate on validation set
         metrics = compute_recall_at_10(model, val_triplets_raw, corpus_texts)
         recall = metrics["Recall@10"]
-        history.append({"epoch": epoch, **metrics})
+        history.append({"epoch": epoch, "Recall@10": recall, "Recall@1": metrics["Recall@1"], "MRR": metrics["MRR"], "Mean rank": metrics["Mean rank"]})
 
-        print(f"Epoch {epoch:3d} , Recall@10={recall:.4f}  Recall@1={metrics['Recall@1']:.4f}  MRR={metrics['MRR']:.4f}  Mean rank={metrics['Mean rank']:.1f}")
+        print(f"Epoch {epoch:3d} (n={len(metrics['ranks_used'])}), Recall@10={recall:.4f}  Recall@1={metrics['Recall@1']:.4f}  MRR={metrics['MRR']:.4f}  Mean rank={metrics['Mean rank']:.1f}")
+
+        import math
+        if math.isnan(recall):
+            print(f"NaN detected in Recall@10 — model weights are corrupted. Stopping.")
+            break
 
         if recall > best_recall:
             best_recall = recall
             patience_counter = 0
             print(f"New best Recall@10={best_recall:.4f} — saving checkpoint")
             model.save(str(output_model_dir))
-            # also keep a clearly-named best copy
             if best_checkpoint_dir.exists():
                 shutil.rmtree(best_checkpoint_dir)
             shutil.copytree(str(output_model_dir), str(best_checkpoint_dir))
@@ -147,7 +140,6 @@ def train_model(
 
     print(f"\nTraining finished. Best model saved to {best_checkpoint_dir}")
 
-    # save epoch metrics to CSV
     csv_path = output_model_dir / "training_history.csv"
     with csv_path.open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=["epoch", "Recall@10", "Recall@1", "MRR", "Mean rank"])
@@ -155,11 +147,10 @@ def train_model(
         writer.writerows(history)
     print(f"Metrics saved to {csv_path}")
 
-    # plot Recall@10 vs epoch
-    epochs = [h["epoch"] for h in history]
+    epochs_list = [h["epoch"] for h in history]
     recalls = [h["Recall@10"] for h in history]
     plt.figure()
-    plt.plot(epochs, recalls, marker="o")
+    plt.plot(epochs_list, recalls, marker="o")
     plt.xlabel("Epoch")
     plt.ylabel("Validation Recall@10")
     plt.title(f"Recall@10 vs Epoch ({loss_type})")
@@ -169,14 +160,10 @@ def train_model(
     plt.close()
     print(f"Plot saved to {plot_path}")
 
-
 if __name__ == "__main__":
-    """
-    Idea is that using the parser we can train the model on different datasets and with different loss functions without 
-    having to rewrite the code.
-    """
     parser = argparse.ArgumentParser(description="Train dense embedding model using sentence-transformers.")
     parser.add_argument("fold_dir", type=str, help="Path to the directory containing train.jsonl and val.jsonl")
+    parser.add_argument("--corpus_path", type=str, required=True, help="Path to the JSONL corpus file")
     parser.add_argument("--model_name", type=str, default="intfloat/e5-base-v2")
     parser.add_argument("--loss", type=str, choices=["triplet", "multiple_negatives_ranking"], default="multiple_negatives_ranking")
     parser.add_argument("--batch_size", type=int, default=16)
@@ -184,15 +171,18 @@ if __name__ == "__main__":
     parser.add_argument("--warmup_steps", type=int, default=120)
     parser.add_argument("--max_epochs", type=int, default=100)
     parser.add_argument("--patience", type=int, default=3)
+    parser.add_argument("--max_grad_norm", type=float, default=1.0, help="Gradient clipping norm (default 1.0). Lower for larger models.")
     args = parser.parse_args()
 
     fold_dir = Path(args.fold_dir).resolve()
+    corpus_path = Path(args.corpus_path).resolve()
 
     if not (fold_dir / "train.jsonl").exists():
         raise FileNotFoundError(f"train.jsonl not found in {fold_dir}")
 
     train_model(
         fold_dir=fold_dir,
+        corpus_path=corpus_path,
         model_name=args.model_name,
         loss_type=args.loss,
         batch_size=args.batch_size,
@@ -200,5 +190,5 @@ if __name__ == "__main__":
         warmup_steps=args.warmup_steps,
         max_epochs=args.max_epochs,
         patience=args.patience,
+        max_grad_norm=args.max_grad_norm,
     )
-

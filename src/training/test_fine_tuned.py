@@ -5,6 +5,7 @@ from pathlib import Path
 from sentence_transformers import SentenceTransformer
 from src.training.evaluate_pairs import compute_metrics, print_comparison_table
 
+# source .venv/bin/activate && python -m src.training.test_fine_tuned data/derived/training/gemma3-12b__e5-base-v2__section_chunks__all__dense__bm25__window3-20/fold_1 --chunks data/derived/section_chunks.jsonl
 # source .venv/bin/activate && python -m src.training.test_fine_tuned data/derived/training/gemma3-12b__e5-base-v2__allchunks__window2-15/fold_1
 # source .venv/bin/activate && python -m src.training.test_fine_tuned data/derived/training/gemma3-12b__e5-base-v2__allchunks__threshold/fold_1
 
@@ -68,14 +69,16 @@ if __name__ == "__main__":
     parser.add_argument("fold_dir", type=str, help="Path to fold directory (e.g. fold_1)")
     parser.add_argument("--base_model", type=str, default="intfloat/e5-base-v2", help="Base model name")
     parser.add_argument("--chunks", type=str, default="data/derived/paragraph_chunks.jsonl")
+    parser.add_argument("--model_path", type=str, default=None, help="Path to fine-tuned weights, overrides the default fold_dir/weights_multiple_negatives_ranking_best")
     args = parser.parse_args()
     
     fold_dir = Path(args.fold_dir).resolve()
     chunks_path = Path(args.chunks).resolve()
     
-    ft_model_path = fold_dir / "weights_multiple_negatives_ranking_best"
-    #ft_model_path = fold_dir / "weights_triplet"
-
+    if args.model_path:
+        ft_model_path = Path(args.model_path).resolve()
+    else:
+        ft_model_path = fold_dir / "weights_multiple_negatives_ranking_best"
     
     if not ft_model_path.exists():
         print(f"Fine-tuned model not found at {ft_model_path}")

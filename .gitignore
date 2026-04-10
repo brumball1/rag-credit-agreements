@@ -16,6 +16,8 @@ __pycache__/
 data/*
 !data/derived/
 data/derived/*
+!data/derived/training/
+!data/derived/training/**
 !data/derived/section_chunks.jsonl
 !data/derived/paragraph_chunks.jsonl
 !data/derived/pairs_cache__gemma3-12b__allchunks.jsonl
@@ -26,10 +28,6 @@ data/derived/*
 !data/derived/triplets__gemma3-12b__gte-modernbert-base__section_chunks__all__dense__bm25__window3-20.jsonl
 models/
 outputs/
-**/weights_*/
-**/weights_multiple_negatives_ranking/
-**/weights_triplet/
-*.safetensors
 *.ckpt
 *.bin
 *.pth
