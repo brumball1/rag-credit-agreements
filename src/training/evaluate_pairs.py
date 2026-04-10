@@ -115,10 +115,10 @@ if __name__ == "__main__":
     
     # Filter to only keep exactly what we want to compare for the presentation
     target_files = [
-        "triplets__gemma3-12b__e5-base-v2__allchunks.jsonl",
         "triplets__gemma3-12b__e5-base-v2__allchunks__window2-15.jsonl",
-        "triplets__gemma3-12b__e5-base-v2__allchunks__threshold.jsonl",
-        "triplets__gemma3-12b__all-mpnet__2137chunks__6686t.jsonl"
+        "triplets__gemma3-12b__e5-base-v2__section_chunks__all__dense__bm25__window3-20.jsonl",
+        "triplets__gemma3-12b__gte-modernbert-base__allchunks__window2-15.jsonl",
+        "triplets__gemma3-12b__gte-modernbert-base__section_chunks__all__dense__bm25__window3-20.jsonl"
     ]
     triplet_files = [f for f in all_files if f.name in target_files]
 
@@ -130,16 +130,17 @@ if __name__ == "__main__":
     for f in triplet_files:
         print(f"  - {f.name}")
 
+    label_map = {
+        "triplets__gemma3-12b__e5-base-v2__allchunks__window2-15.jsonl": "e5-v2 | Para | Window",
+        "triplets__gemma3-12b__e5-base-v2__section_chunks__all__dense__bm25__window3-20.jsonl": "e5-v2 | Sect | Hybrid",
+        "triplets__gemma3-12b__gte-modernbert-base__allchunks__window2-15.jsonl": "GTE | Para | Window",
+        "triplets__gemma3-12b__gte-modernbert-base__section_chunks__all__dense__bm25__window3-20.jsonl": "GTE | Sect | Hybrid"
+    }
+
     results = {}
     file_meta = {}  # store full filename for CSV
     for path in triplet_files:
-        # use the embedding model part of the filename as the label
-        # format: triplets__<llm>__<embed>__<chunks>chunks.jsonl
-        parts = path.stem.split("__")
-        # format: triplets__<llm>__<embed>__<chunks>[__<strategy>].jsonl
-        embed = parts[2] if len(parts) >= 3 else path.stem
-        strategy_suffix = f"__{parts[4]}" if len(parts) >= 5 else ""
-        label = embed + strategy_suffix
+        label = label_map.get(path.name, path.name)
         print(f"\nLoading {path.name}...")
         triplets = load_triplets(path)
         results[label] = compute_metrics(triplets)

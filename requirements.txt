@@ -4,6 +4,7 @@ pandas
 pathlib
 tqdm
 jsonlines
+rank-bm25>=0.2.2
 
 
 #pdf processing

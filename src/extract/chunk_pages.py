@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-from stats.tokeniser import tokeniser
-from extract.page_reader import iterate_pages
+from src.stats.tokeniser import tokeniser
+from src.extract.page_reader import iterate_pages
 
 
 def chunk_pages(input_dir: Path, output_path: Path) -> None:

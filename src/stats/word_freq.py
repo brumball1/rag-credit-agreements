@@ -2,8 +2,8 @@ from collections import Counter
 from pathlib import Path
 from typing import List
 
-from extract.page_reader import iterate_pages
-from stats.tokeniser import tokeniser, lemmatise
+from src.extract.page_reader import iterate_pages
+from src.stats.tokeniser import tokeniser, lemmatise
 
 
 def word_frequency(input_dir: Path, stops: List[str]) -> Counter:

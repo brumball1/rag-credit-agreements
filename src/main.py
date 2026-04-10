@@ -1,12 +1,13 @@
 from pathlib import Path
-from extract.chunk_pages import chunk_pages
-from extract.chunk_paragraphs import chunk_paragraphs
-from rag.embeddings import embed_all_mpnet_base_v2
-from stats.stopwords import load_stopwords
-from stats.word_freq import word_frequency, save_word_bank
-from stats.ngrams import (get_bigrams, get_bigrams_per_page, get_trigrams, get_trigrams_per_page)
-from stats.plotting.plot_paragraph_lengths import plot_token_count_per_document
-from rag.similarity import (run_similarity_analysis)
+from src.extract.chunk_pages import chunk_pages
+from src.extract.chunk_paragraphs import chunk_paragraphs
+from src.extract.chunk_sections import chunk_sections
+from src.rag.embeddings import embed_all_mpnet_base_v2
+from src.stats.stopwords import load_stopwords
+from src.stats.word_freq import word_frequency, save_word_bank
+from src.stats.ngrams import (get_bigrams, get_bigrams_per_page, get_trigrams, get_trigrams_per_page)
+from src.stats.plotting.plot_paragraph_lengths import plot_token_count_per_document
+from src.rag.similarity import (run_similarity_analysis)
 
 
 
@@ -28,12 +29,13 @@ def main(config: PipelineConfig):
     paragraph_chunks = base_dir / "data" / "derived" / "paragraph_chunks.jsonl"
 
 
-    # if config.chunking == "page":
-    #     chunk_pages(processed_dir, derived_dir / "page_chunks.jsonl")
-    #
-    # elif config.chunking == "paragraph":
-    #     chunk_paragraphs(processed_dir, derived_dir / "paragraph_chunks.jsonl")
-    #
+    if config.chunking == "page":
+        chunk_pages(processed_dir, derived_dir / "page_chunks.jsonl")
+    elif config.chunking == "paragraph":
+        chunk_paragraphs(processed_dir, derived_dir / "paragraph_chunks.jsonl")
+    elif config.chunking == "section":
+        chunk_sections(processed_dir, derived_dir / "section_chunks.jsonl")
+
     # stops = load_stopwords(base_dir)
 
     # get_bigrams(processed_dir, stops, derived_dir / "bigrams.csv")

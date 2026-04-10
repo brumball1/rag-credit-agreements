@@ -4,8 +4,8 @@ from typing import List
 
 from nltk import bigrams as nltk_bigrams, trigrams as nltk_trigrams
 
-from extract.page_reader import iterate_pages
-from stats.tokeniser import tokeniser
+from src.extract.page_reader import iterate_pages
+from src.stats.tokeniser import tokeniser
 
 
 def get_bigrams(input_dir: Path, stops: List[str], output_path: Path) -> None:
