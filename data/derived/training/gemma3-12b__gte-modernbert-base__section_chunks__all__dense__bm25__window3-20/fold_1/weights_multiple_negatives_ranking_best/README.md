@@ -1,685 +1,254 @@
 ---
+license: apache-2.0
+language:
+- en
+base_model:
+- answerdotai/ModernBERT-base
+base_model_relation: finetune
+pipeline_tag: sentence-similarity
+library_name: transformers
 tags:
 - sentence-transformers
-- sentence-similarity
-- feature-extraction
-- generated_from_trainer
-- dataset_size:7961
-- loss:MultipleNegativesRankingLoss
-base_model: Alibaba-NLP/gte-modernbert-base
-widget:
-- source_sentence: Advance conversion notice timing
-  sentences:
-  - resignation shall be conditioned on and subject to the appointment of a replacement
-    Issuing Bank reasonably satisfactory to the Borrower who agrees to assume the
-    entire Letter of Credit Commitment of the resigning Issuing Bank, and no such
-    resignation shall become effective unless and until such replacement Issuing Bank
-    has accepted such appointment and agreed to provide such Letter of Credit Commitment
-    on terms acceptable to the Borrower; provided, further, that it is understood
-    and agreed that in the event of any such resignation, any Letter of Credit then
-    outstanding shall remain outstanding (irrespective of whether any amount have
-    been drawn at such time). In the event of any such resignation of any Issuing
-    Bank, the Borrower shall be entitled, but shall not be obligated, to appoint another
-    Revolving Lender that is willing, in its sole discretion to accept such appointment
-    in writing as successor Issuing Bank in respect of such resigning Issuing Bank;
-    it being understood that the resignation of any such Issuing Bank shall not be
-    effective in the event of a failure to appoint any such successor Issuing Bank
-    and/or a failure of any Revolving Lender to accept such appointment as Issuing
-    Bank. Upon the acceptance of any appointment as Issuing Bank hereunder, the successor
-    Issuing Bank shall thereupon succeed to and become vested with all the rights,
-    powers, privileges and duties of the retiring Issuing Bank, and the retiring Issuing
-    Bank shall be discharged from its duties and obligations in such capacity hereunder.
-    (i) Cash Collateralization. (i) If any Event of Default exists and the Loans have
-    been declared due and payable in accordance with Article 7 hereof, then on the
-    Business Day following the date on which the Borrower receives notice from the
-    Administrative Agent (at the direction of the Required Revolving Lenders) demanding
-    the deposit of Cash collateral pursuant to this paragraph (i), the Borrower shall
-    deposit (or shall cause to be deposited), in an interestbearing account with the
-    Administrative Agent, in the name of the Administrative Agent and for the benefit
-    of the Revolving Lenders (the "LC Collateral Account"), an amount in Cash equal
-    to 100% of the LC Exposure as of such date (minus the amount then on deposit in
-    the LC Collateral Account); provided that the obligation to deposit such Cash
-    collateral shall become effective immediately, and such deposit shall become immediately
-    due and payable, without demand or other notice of any kind, upon the occurrence
-    of any Event of Default with respect to the Borrower described in Section 7.01(f)
-    or (g). (ii) Any such deposit under clause (i) above shall be held by the Administrative
-    Agent as collateral for the payment and performance of the Secured Obligations
-    in accordance with the provisions of this paragraph (i). The Administrative Agent
-    shall have exclusive dominion and control, including the exclusive right of withdrawal,
-    over such account, and the Borrower hereby grants the Administrative Agent, for
-    the benefit of the Secured Parties, a first priority security interest in the
-    LC Collateral Account.
-  - " . Each Alternate Base Rate Advance shall continue as an Alternate Base Rate\
-    \ Advance unless and until such Alternate Base Rate Advance is converted into\
-    \ a Term SOFR Advance pursuant to this Section 2.9 or is repaid in accordance\
-    \ with Section 2.7. Each Term SOFR Advance shall continue as a Term SOFR Advance\
-    \ until the end of the then applicable Interest Period therefor, at which time\
-    \ such Term SOFR Advance shall be automatically converted into an Alternate Base\
-    \ Rate Advance, unless (a) such Term SOFR Advance is or was repaid in accordance\
-    \ with Section 2.7 or (b) the Borrower shall have given the Administrative Agent\
-    \ a Conversion/Continuation Notice (as defined below) requesting that, at the\
-    \ end of such Interest Period, such Term SOFR Advance continue as a Term SOFR\
-    \ Advance for the same or another\n\nInterest Period. Subject to the terms of\
-    \ Section 2.6, the Borrower may elect from time to time to convert all or any\
-    \ part of an Alternate Base Rate Advance into a Term SOFR Advance. Subject to\
-    \ the payment of any funding indemnification amounts required by Section 3.4,\
-    \ the Borrower may elect from time to time to convert all or any part of a Term\
-    \ SOFR Advance into an Alternate Base Rate Advance. The Borrower shall give the\
-    \ Administrative Agent irrevocable notice (a \"Conversion/Continuation Notice\"\
-    ) of each (x) conversion of an Alternate Base Rate Advance into a Term SOFR Advance\
-    \ or the continuation of a Term SOFR Advance as a new Term SOFR Advance not later\
-    \ than 11:00 a.m. (New York time) at least three (3) RFR Business Days prior to\
-    \ the date of the requested conversion or continuation and (y) conversion of a\
-    \ Term SOFR Advance into an Alternate Base Rate Advance, not later than 12:00\
-    \ p.m. (New York time) on the date of the requested conversion, in each case specifying:\n\
-    \ (a) the requested date of such conversion or continuation, which shall be a\
-    \ Business Day;\n\n (b) the aggregate amount and Type of the Advance which is\
-    \ to be converted or continued; and\n\n (c) the amount and Type(s) of Advance(s)\
-    \ into which such Advance is to be converted or continued and, in the case of\
-    \ a conversion into or continuation of a Term SOFR Advance, the duration of the\
-    \ Interest Period applicable thereto, which shall end on or prior to the latest\
-    \ Facility Termination Date.\n"
-  - " . (a) Interest accrued on each Alternate Base Rate Advance shall be payable\
-    \ on each Payment Date, commencing with the first such date to occur after the\
-    \ Closing Date, on any date on which an Alternate Base Rate Advance is prepaid\
-    \ (with respect to the principal so prepaid), whether due to acceleration or otherwise,\
-    \ and at maturity. Interest accrued on that portion of the outstanding principal\
-    \ amount of any Alternate Base Rate Advance converted into a Term SOFR Advance\
-    \ on a day other than a Payment Date shall be payable on the date of conversion.\
-    \ Interest accrued on each Term SOFR Advance shall be payable on the last day\
-    \ of its applicable Interest Period, on any date on which the Term SOFR Advance\
-    \ is prepaid (with respect to the principal so prepaid), whether by acceleration\
-    \ or otherwise, and at maturity. Interest accrued on each Term SOFR Advance having\
-    \ an Interest Period longer than three (3) months shall also be payable on the\
-    \ last day of each three-month interval during such Interest Period. Interest\
-    \ with respect to Term SOFR Loans and commitment fees shall be calculated for\
-    \ actual days elapsed on the basis of a 360-day year. Interest with respect to\
-    \ Alternate Base Rate Advances shall be calculated for the actual days elapsed\
-    \ on the basis of a 365 or 366-day year, as applicable.\n Interest shall be payable\
-    \ for the day an Advance is made but not for the day of any payment on the amount\
-    \ paid if payment is made in full and received prior to 12:00 p.m. (New York time)\
-    \ at the place of payment. If any payment of principal of or interest on an Advance\
-    \ shall become due on a day which is not a Business Day, such payment shall be\
-    \ made on the next succeeding Business Day and, in the case of a principal payment,\
-    \ such extension of time shall be included in computing interest in connection\
-    \ with such payment.\n (b) With respect to any Term SOFR Advances, the Administrative\
-    \ Agent will have the right to make Conforming Changes from time to time and,\
-    \ notwithstanding anything to the contrary herein or in any other Loan Document,\
-    \ any amendments implementing such Conforming Changes will become effective without\
-    \ any further action or consent of any other party to this Agreement; provided\
-    \ that, with respect to any such amendment effected, the Administrative Agent\
-    \ shall post each such amendment implementing such Conforming Changes to the Borrower\
-    \ and the Lenders reasonably promptly after such amendment becomes effective.\n"
-- source_sentence: If a lender defaults, what are the Borrower’s responsibilities
-    regarding Swingline Loans?
-  sentences:
-  - (d) The 2024 Incremental Delayed Draw Term Lenders, the Administrative Agent and
-    the Borrower agree that the amendments to the Existing Credit Agreement related
-    to the 2024 Incremental Delayed Draw Term Loan Commitments effected pursuant to
-    this Amendment are necessary or advisable, in each of their reasonable opinions,
-    to effect the provisions of Section 2.22 of the Existing Credit Agreement with
-    respect to the 2024 Incremental Delayed Draw Term Loan Commitments and that this
-    Amendment shall constitute an Incremental Facility Amendment pursuant to and in
-    accordance with Section 2.22(c) of the Existing Credit Agreement. SECTION 5. 2024
-    Incremental Revolving Facility.
-  - "Defaulting Lender's Revolving Facility Commitment.\n\n (v) Elimination of Remaining\
-    \ Fronting Exposure. Within one (1) Business Day of being notified that any Lender\
-    \ has become a Defaulting Lender, (A) the Borrower shall deliver to the Administrative\
-    \ Agent Cash Collateral in an amount sufficient to cover all Fronting Exposure\
-    \ of the Revolving L/C Exposure (after giving effect to Section 2.24(a)(iv)) which\
-    \ shall be held as security for the reimbursement obligations of the Borrower\
-    \ with respect to the Revolving L/C Exposure and (B) the Borrower shall repay\
-    \ an amount of Swingline Loans sufficient to eliminate the Fronting Exposure of\
-    \ the Swingline Lender (after giving effect to\n"
-  - ".\n\n (a) Subject to the terms and conditions set forth herein, the Swingline\
-    \ Lender agrees to make Swingline Loans in Dollars to the Borrower from time to\
-    \ time during the applicable Availability Period, in an aggregate principal amount\
-    \ at any time outstanding that will not result in (i) the aggregate principal\
-    \ amount of outstanding Swingline Loans exceeding the Swingline Commitment, (ii)\
-    \ the aggregate amount of Swingline Loans, Letters of Credit and Revolving Facility\
-    \ Loans outstanding issued by the Swingline Lender exceeding the Swingline Lender's\
-    \ Revolving Facility Commitment or (iii) the Revolving Facility Credit Exposure\
-    \ of the applicable Class exceeding the total Revolving Facility Commitments of\
-    \ such Class; provided that the Swingline Lender shall not be required to make\
-    \ a Swingline Loan to refinance an outstanding Swingline Borrowing. Within the\
-    \ foregoing limits and subject to the terms and conditions set forth herein, the\
-    \ Borrower may borrow, prepay and reborrow Swingline Loans.\n (b) To request a\
-    \ Swingline Borrowing, the Borrower shall give the Administrative Agent and the\
-    \ Swingline Lender prior written notice in the form of a Swingline Borrowing Request,\
-    \ not later than 2:00 p.m., New York City time, on the day of a proposed Swingline\
-    \ Borrowing. Each such Swingline Borrowing Request shall be irrevocable and shall\
-    \ specify (i) the requested date of such Swingline Borrowing (which shall be a\
-    \ Business Day) and (ii) the amount of the requested Swingline Borrowing. Any\
-    \ funding of a Swingline Loan by the Swingline Lender shall be made on the proposed\
-    \ date thereof by wire transfer of immediately available funds by 5:00 p.m., New\
-    \ York City time, to the account of the Borrower identified by the Borrower to\
-    \ the Swingline Lender (or, in the case of a Swingline Borrowing made to finance\
-    \ the reimbursement of an L/C Disbursement as provided in\n"
-- source_sentence: asset transfer Parent Subsidiary Loan Party
-  sentences:
-  - " (u) deferred tax expenses associated with tax deductions or net operating losses\
-    \ arising as a result of the Transactions or the release of any valuation allowance\
-    \ related to such item, shall be excluded (provided that they shall be deducted\
-    \ in any period in which such tax expense is incurred);\n (v) any expenses or\
-    \ charges to the extent paid by a third party on behalf of Holdings or any Restricted\
-    \ Subsidiary shall be excluded; and\n\n (w) costs and expenses in connection with\
-    \ the establishment and integration of enterprise resource planning systems shall\
-    \ be excluded. \"Consolidated Total Assets\" shall mean, as of any date of determination,\
-    \ the total amount of all assets of Holdings and the other Restricted Subsidiaries,\
-    \ determined in accordance with GAAP as of such date. \"Consolidated Total Debt\"\
-    \ shall mean, as of any date of determination, without duplication, (i) the aggregate\
-    \ principal amount of funded Indebtedness for borrowed money, Finance Lease Obligations\
-    \ and debt obligations evidenced by promissory notes or similar instruments of\
-    \ Holdings and the Restricted Subsidiaries outstanding on such date, determined\
-    \ on a consolidated basis in accordance with GAAP (but excluding the effects of\
-    \ any discounting of Indebtedness resulting from the application of purchase accounting\
-    \ in connection with the Transactions or any Permitted Business Acquisitions)\
-    \ and (ii) guarantee obligations of Holdings and the Restricted Subsidiaries in\
-    \ respect of Indebtedness that, if incurred directly by Holdings or any Restricted\
-    \ Subsidiary, would constitute Indebtedness under clause (i) above; provided that\
-    \ Consolidated Total Debt shall not include (i) Indebtedness in respect of letters\
-    \ of credit, except to the extent of drawn and unreimbursed amounts\n\nthereunder,\
-    \ (ii) Indebtedness of Unrestricted Subsidiaries and (iii) obligations under Hedge\
-    \ Agreements.\n \"Continuing Letter of Credit\" shall have the meaning assigned\
-    \ to such term in\n"
-  - ". The Parent will not, and will not permit any Subsidiary to, enter into any\
-    \ transaction (including, without limitation, the purchase or sale of any Property\
-    \ or service) with, or make any payment or transfer to, any Affiliate except:\n\
-    \ (a) for transactions between the Parent and any Wholly Owned Subsidiary or between\
-    \ Wholly Owned Subsidiaries,\n\n (b) payment of employees, consultants, officers\
-    \ and directors and benefits (including retirement, health, stock option and other\
-    \ benefit plans), severance and indemnification arrangements in the ordinary course\
-    \ or as approved by the board of directors or comparable governing body of the\
-    \ Parent or any Subsidiary,\n\n (c) provision of financial and other services\
-    \ and the sharing of know-how, technology and office space in the ordinary course\
-    \ of business, and\n\n (d) upon terms no less favorable to such Person than such\
-    \ Person would obtain in a comparable arm's-length transaction.\n"
-  - " . The Parent will not, nor will it permit any Subsidiary to, merge or consolidate\
-    \ with or into any other Person or convey, transfer, lease or otherwise dispose\
-    \ of (whether in one transaction or in a series of transactions) all or substantially\
-    \ all of the assets of the Parent, except that:\n\n (a) a Wholly-Owned Subsidiary\
-    \ (other than the Borrower) may merge into, consolidate with or dispose of assets\
-    \ to any Loan Party or any Wholly-Owned Subsidiary of a Loan Party;\n\n (b) any\
-    \ Loan Party or any Subsidiary may merge or consolidate with or dispose of assets\
-    \ to any other Person so long as\n (i) in the case of a merger or consolidation\
-    \ to which the Parent is a party, (A) the Parent is the surviving corporation\
-    \ and (B) the Parent remains organized under the laws of the United Kingdom (including\
-    \ its member countries), Ireland or of the United States, any state thereof or\
-    \ the District of Columbia; (ii) in the case of the Borrower, (A) the Borrower\
-    \ is the surviving corporation and (B) the Borrower remains organized under the\
-    \ laws of the United States, any state thereof or the District of Columbia; (iii)\
-    \ in the case of a merger or consolidation to which any Guarantor (other than\
-    \ the Parent) is a party or a disposal of all or substantially all of the assets\
-    \ of any Guarantor (other than the Parent), such Guarantor is the surviving Person\
-    \ or the surviving Person shall expressly assume the obligations of such Guarantor\
-    \ in a manner reasonably acceptable to the Administrative Agent; and (iv) in the\
-    \ case of a merger or consolidation to which a Subsidiary is a party and to which\
-    \ a Loan Party is not a party or a disposal of all or substantially all of the\
-    \ assets of any Subsidiary (other than to a Loan Party), the surviving corporation\
-    \ is a Subsidiary, and in any such case other than the Acquisition, prior to and\
-    \ after giving\n\neffect to such merger or consolidation, no Default or Unmatured\
-    \ Default shall have occurred and be continuing; and\n\n (c) any Subsidiary may\
-    \ enter into a merger or consolidation as a means of effecting a disposition or\
-    \ acquisition which would not result in the disposition of all or substantially\
-    \ all of the assets of the Parent.\n"
-- source_sentence: What types of events would trigger a pro forma compliance calculation?
-  sentences:
-  - " (x) Intellectual Property. Set forth on Schedule 7 to the Perfection Certificate\
-    \ is a complete and accurate (in all material respects) list of all United States\
-    \ and foreign Patents, Copyrights, and Trademarks registered or for which applications\
-    \ are pending in the name of any of the Loan Parties, including the name of the\
-    \ registered owner, the registration/application number and the registration/application\
-    \ date, as applicable. Each Loan Party owns or licenses all Patents, Trademarks,\
-    \ Copyrights and other Intellectual Property rights which are reasonably necessary\
-    \ for the operation of its business. No Loan Party, to its knowledge, is currently\
-    \ infringing any Patent, Trademark, Copyright or other intellectual property right\
-    \ owned by any other Person by the sale or use of any product, process, method,\
-    \ substance, part or other material now sold or used, where such sale or use could\
-    \ reasonably be expected, individually or in the aggregate, to have a Material\
-    \ Adverse Effect, and no claim or litigation is pending or, to each Loan Party's\
-    \ knowledge, threatened against any Loan Party that contests its right to sell\
-    \ or use any such product, process, method, substance, part or other material.\n\
-    \ (y) Labor Matters. As of the Closing Date, neither any Loan Party nor any of\
-    \ its Subsidiaries is party to any labor contract, except those listed on Schedule\
-    \ 5.01(y). There are no existing or, to each Loan Party's knowledge after due\
-    \ inquiry, threatened strikes, lockouts or other disputes relating to any collective\
-    \ bargaining or similar labor agreement to which any Loan Party or any of its\
-    \ Subsidiaries is a party which could reasonably be expected, individually or\
-    \ in the aggregate, to have a Material Adverse Effect.\n (z) Compliance with Environmental\
-    \ Laws. Except as to matters that could not reasonably be expected to have a Material\
-    \ Adverse Effect: (i) each Loan Party and each of its Subsidiaries is in compliance\
-    \ with all applicable Environmental Laws; (ii) there are and have been, no conditions,\
-    \ occurrences, violations of Environmental Law, or presence or Releases of Hazardous\
-    \ Materials which could reasonably be expected to form the basis of an Environmental\
-    \ Action against any Loan Party, any of its Subsidiaries or affect any real property\
-    \ used in the business of any Loan Party or any of its Subsidiaries; (iii) there\
-    \ are no pending Environmental Actions against any Loan Party or any of its Subsidiaries,\
-    \ and no Loan Party or any Subsidiary has received any written notification of\
-    \ any alleged violation of, or liability pursuant to, Environmental Law or responsibility\
-    \ for the Release or threatened Release of, or exposure to, any Hazardous Materials;\
-    \ and (iv) no Environmental Lien has attached to any Collateral and no conditions\
-    \ exist that could reasonably be expected to result in the imposition of such\
-    \ a Lien on any Collateral. To the knowledge of each Loan Party, all of the real\
-    \ property used in the business (including its Equipment) is free, and has at\
-    \ all times been free, of Hazardous Materials, underground storage tanks and underground\
-    \ waste disposal areas except in compliance with 59"
-  - ", Section 7.01(h) or Section 7.01(i). \"Specified Hedge Agreement\" shall mean\
-    \ any Hedge Agreement entered into or assumed between or among the Borrower or\
-    \ any other Restricted Subsidiary and any Qualified Counterparty and designated\
-    \ by the Qualified Counterparty and the Borrower in writing to the Administrative\
-    \ Agent as a \"Specified Hedge Agreement\". As of the date of this Agreement,\
-    \ Specified Hedge Agreements include the ISDA Master Agreement, dated as of November\
-    \ 1, 2022, between Barclays Bank plc and the Borrower. \"Specified Representations\"\
-    \ shall mean the representations and warranties with respect to the Borrower and\
-    \ the Subsidiary Loan Parties set forth in Section 3.01 (but solely with respect\
-    \ to organizational status and organizational power and authority to execute,\
-    \ deliver and perform obligations under the applicable Loan Documents), Section\
-    \ 3.02 (but solely with respect to clauses (a) and (b)(i) thereof), Section 3.03\
-    \ (but solely with respect to the Loan Documents), Section 3.10 (but solely with\
-    \ respect to clause (b)(ii) thereof), Section 3.11, Section 3.17, Section 3.19\
-    \ and Section 3.22.\n \"Specified Transaction\" shall mean with respect to any\
-    \ period, any of the following identified by Holdings: (a) any transaction or\
-    \ series of related transactions, including Investments, that results in a person\
-    \ becoming a Restricted Subsidiary, (b) any designation of a Subsidiary as a Restricted\
-    \ Subsidiary or an Unrestricted Subsidiary, (c) any Permitted Business Acquisition,\
-    \ (d) any transaction or series of related transactions, including Asset Sales,\
-    \ that results in a Restricted Subsidiary ceasing to be a Subsidiary of the Borrower,\
-    \ (e) any acquisition or disposition of assets constituting a business unit, line\
-    \ of business or division of another person or a facility, (f) any material acquisition\
-    \ or disposition, (g) any restructuring of the business of the Borrower, whether\
-    \ by merger, consolidation, amalgamation or\n\notherwise, (h) any incurrence or\
-    \ repayment of Indebtedness (other than Indebtedness incurred or repaid under\
-    \ any revolving credit facility in the ordinary course of business for working\
-    \ capital purposes), (i) any Restricted Payment, (j) any Limited Condition Event\
-    \ or (k) any other event, in each case that by the terms of the Loan Documents\
-    \ requires pro forma compliance with a test or covenant hereunder or requires\
-    \ such test or covenant to be calculated on a \"Pro Forma Basis.\" \"Standby Letters\
-    \ of Credit\" shall have the meaning assigned to such term in\n"
-  - "(a) and/or Section 6.10(b), as applicable, (iv) there shall be no pro forma or\
-    \ other reduction of the amount of Indebtedness by the amount of any Cure Amount\
-    \ for purposes of determining compliance with Section 6.10(a) or Section 6.10(b)\
-    \ for the Fiscal Quarter in respect of which the Cure Right was exercised (other\
-    \ than, with respect to any future period, to the extent of any portion of such\
-    \ Cure Amount that is actually applied to prepay Indebtedness (including by way\
-    \ of buyback or repurchase)),\n (v) any pro forma adjustment to Consolidated Adjusted\
-    \ EBITDA resulting from any Cure Amount shall be disregarded for purposes of determining\
-    \ (A) whether any financial ratio-based condition to the availability of any carve-out\
-    \ set forth in Article 6 of this Agreement has been satisfied or (B) the Applicable\
-    \ Rate , the 2024 Incremental Delayed Draw Term Loan Commitment Fee Rate or the\
-    \ Revolving Commitment F e, in each case during each Fiscal Quarter in which the\
-    \ pro forma adjustment applies, and (vi) no Revolving Lender or Issuing Bank shall\
-    \ be required to make any Revolving Loan or issue, amend or increase the face\
-    \ amount of any Letter of Credit from and after the date on which a Compliance\
-    \ Certificate demonstrating a failure to comply with Section 6.10(a) or Section\
-    \ 6.10(b) for the Test Period ending on the last day of any Fiscal Quarter is\
-    \ (or would be 163\n\nrequired to be) delivered pursuant to Section 5.01(c) until\
-    \ the date on which the Borrower receives the relevant Cure Amount.\n"
-- source_sentence: What happens if the total delayed amount exceeds $125,000,000?
-  sentences:
-  - '. The Loan Parties shall, and shall cause each of their Subsidiaries to, do and
-    cause to be done all things necessary to preserve and keep in full force and effect
-    all of its registrations of Trademarks, Patents and Copyrights constituting Material
-    Intellectual Property.
-
-    '
-  - "BARCLAYS BANK PLC, as a 2024 Lender and an Issuing Bank By: _/s/ Ritam Bhalla\
-    \ Name: Ritam Bhalla Title: Director [Signature Page to Amendment No. 2 to Credit\
-    \ Agreement] WEIL:\\99400949\\10\\45453.0004\n\nCITIBANK, N.A., as a 2024 Lender\
-    \ and an Issuing Bank By: _/s/ Karan Kapoor Name: Karan Kapoor Title: Vice President\
-    \ [Signature Page to Amendment No. 2 to Credit Agreement] WEIL:\\99400949\\10\\\
-    45453.0004\n\nJEFFERIES FINANCE LLC, as a 2024 Lender and an Issuing Bank By:\
-    \ _/s/ Jonathan Ciuffreda Name: Jonathan Ciuffreda Title: Managing Director [Signature\
-    \ Page to Amendment No. 2 to Credit Agreement] WEIL:\\99400949\\10\\45453.0004\n\
-    \nSchedule I 2024 Commitment Schedule 2024 Incremental Delayed 2024 Replacement\
-    \ 2024 Incremental 2024 Replacement Term Draw Term Loan Revolving Credit Revolving\
-    \ Credit Name of Lender Loan Commitment Commitment Commitment Commitment Bank\
-    \ of America, $28,546,712.81 $36,764,705.89 $20,813,148.78 $13,875,432.52 N.A.\
-    \ PNC Bank, $21,410,034.60 $27,573,529.41 $15,609,861.59 $10,406,574.40 National\
-    \ Association MUFG Bank, $21,410,034.60 $27,573,529.41 $15,609,861.59 $10,406,574.40\
-    \ LTD TD Bank, N.A. $9,991,349.48 $12,867,647.06 $7,284,602.08 $4,856,401.38 Synovus\
-    \ Bank $9,991,349.48 $12,867,647.06 $7,284,602.08 $4,856,401.38 Raymond James\
-    \ $2,854,671.28 $3,676,470.59 $2,081,314.88 $1,387,543.25 Bank Goldman Sachs $0.00\
-    \ $0.00 $3,000,000.00 $2,000,000.00 Bank USA Barclays Bank $2,941,176.47 $0.00\
-    \ $1,235,294.12 $823,529.41 PLC Citibank, N.A. $1,427,335.64 $1,838,235.29 $1,040,657.44\
-    \ $693,771.63 Jefferies Finance $1,427,335.64 $1,838,235.29 $1,040,657.44 $693,771.63\n\
-    \ Total: $100,000,000.00 $125,000,000.00 $75,000,000.00 $50,000,000.00\n\nAnnex\
-    \ A\n [see attached]\n\nPublished Deal CUSIP Number: 30322UAA9 Published Revolver\
-    \ CUSIP Number: 30322UA D3 Published Term Loan A CUSIP Number: 30322UA E1 Published\
-    \ Delayed Draw Term Loan CUSIP Number: 30322UAF8\n dated as of October 6, 2021,\
-    \ as amended by Amendment No. 1, dated as of February 24, 2023, as amended by\
-    \ Amendment No. 2, dated as of January 5, 2024, among FWR HOLDING CORPORATION,\
-    \ as the Borrower, AI FRESH PARENT, INC., as Holdings, THE FINANCIAL INSTITUTIONS\
-    \ PARTY HERETO, as Lenders and Issuing Banks, and BANK OF AMERICA, N.A., as Administrative\
-    \ Agent, an Issuing Bank and Swingline Lender, BOFA SECURITIES, INC., MUFG BANK,\
-    \ LTD. and PNC BANK CAPITAL MARKETS LLC as Joint Lead Arrangers and Joint Bookrunners,\
-    \ MUFG BANK, LTD. and PNC BANK, NATIONAL ASSOCIATION as Syndication Agents, and\
-    \ TD BANK, N.A. and SYNOVUS BANK, as Co-Documentation Agents"
-  - 'Annex C 2024 Commitment Schedule Amount of 2024 Incremental Delayed Amount of
-    2024 Term Draw Term Loan Amount of 2024 Revolving Name of Lender Loan Commitment
-    Commitment Credit Commitment Letter of Credit Sublimit Bank of America, $28,546,712.81
-    $36,764,705.89 N.A. $34,688,581.30 $7,937,716.26 PNC Bank, $21,410,034.60 $27,573,529.41
-    National Association $26,016,435.99 $5,203,287.20 MUFG Bank, $21,410,034.60 $27,573,529.41
-    LTD $26,016,435.99 $5,203,287.20 TD Bank, N.A. $9,991,349.48 $12,867,647.06 $12,141,003.46
-    $2,428,200.69 Synovus Bank $9,991,349.48 $12,867,647.06 $12,141,003.46 $2,428,200.69
-    Raymond James $2,854,671.28 $3,676,470.59 Bank $3,468,858.13 $693,771.63 Goldman
-    Sachs $0.00 $0.00 Bank USA $5,000,000.00 $0.00 Barclays Bank $2,941,176.47 $0.00
-    PLC $2,058,823.53 $411,764.71 Citibank, N.A. $1,427,335.64 $1,838,235.29 $1,734,429.07
-    $346,885.81 Jefferies Finance $1,427,335.64 $1,838,235.29 LLC $1,734,429.07 $346,885.81
-    Total: $100,000,000.00 $125,000,000.00 $125,000,000.00 $25,000,000.00'
-pipeline_tag: sentence-similarity
-library_name: sentence-transformers
+- mteb
+- embedding
+- transformers.js
+- text-embeddings-inference
 ---
 
-# SentenceTransformer based on Alibaba-NLP/gte-modernbert-base
+# gte-modernbert-base
 
-This is a [sentence-transformers](https://www.SBERT.net) model finetuned from [Alibaba-NLP/gte-modernbert-base](https://huggingface.co/Alibaba-NLP/gte-modernbert-base). It maps sentences & paragraphs to a 768-dimensional dense vector space and can be used for retrieval.
+We are excited to introduce the `gte-modernbert` series of models, which are built upon the latest modernBERT pre-trained encoder-only foundation models. The `gte-modernbert` series models include both text embedding models and rerank models.
 
-## Model Details
+The `gte-modernbert` models demonstrates competitive performance in several text embedding and text retrieval evaluation tasks when compared to similar-scale models from the current open-source community. This includes assessments such as MTEB, LoCO, and COIR evaluation.
 
-### Model Description
-- **Model Type:** Sentence Transformer
-- **Base model:** [Alibaba-NLP/gte-modernbert-base](https://huggingface.co/Alibaba-NLP/gte-modernbert-base) <!-- at revision e7f32e3c00f91d699e8c43b53106206bcc72bb22 -->
-- **Maximum Sequence Length:** 8192 tokens
-- **Output Dimensionality:** 768 dimensions
-- **Similarity Function:** Cosine Similarity
-- **Supported Modality:** Text
-<!-- - **Training Dataset:** Unknown -->
-<!-- - **Language:** Unknown -->
-<!-- - **License:** Unknown -->
+## Model Overview
 
-### Model Sources
+- Developed by: Tongyi Lab, Alibaba Group
+- Model Type: Text Embedding
+- Primary Language: English
+- Model Size: 149M
+- Max Input Length: 8192 tokens
+- Output Dimension: 768
 
-- **Documentation:** [Sentence Transformers Documentation](https://sbert.net)
-- **Repository:** [Sentence Transformers on GitHub](https://github.com/huggingface/sentence-transformers)
-- **Hugging Face:** [Sentence Transformers on Hugging Face](https://huggingface.co/models?library=sentence-transformers)
+### Model list
 
-### Full Model Architecture
 
-```
-SentenceTransformer(
-  (0): Transformer({'transformer_task': 'feature-extraction', 'modality_config': {'text': {'method': 'forward', 'method_output_name': 'last_hidden_state'}}, 'module_output_name': 'token_embeddings', 'architecture': 'ModernBertModel'})
-  (1): Pooling({'embedding_dimension': 768, 'pooling_mode': 'cls', 'include_prompt': True})
-)
-```
+|                                         Models                                         | Language |       Model Type       | Model Size | Max Seq. Length | Dimension | MTEB-en | BEIR | LoCo | CoIR |
+|:--------------------------------------------------------------------------------------:|:--------:|:----------------------:|:----------:|:---------------:|:---------:|:-------:|:----:|:----:|:----:|
+|  [`gte-modernbert-base`](https://huggingface.co/Alibaba-NLP/gte-modernbert-base)   | English  |     text embedding     |    149M    |      8192       |    768    |  64.38  | 55.33 | 87.57 | 79.31 | 
+| [`gte-reranker-modernbert-base`](https://huggingface.co/Alibaba-NLP/gte-reranker-modernbert-base)  | English  | text reranker     |    149M    |    8192    |     -     |  - | 56.19 | 90.68 | 79.99 |
 
 ## Usage
 
-### Direct Usage (Sentence Transformers)
+> [!TIP]
+> For `transformers` and `sentence-transformers`, if your GPU supports it, the efficient Flash Attention 2 will be used automatically if you have `flash_attn` installed. It is not mandatory.
+> 
+> ```bash
+> pip install flash_attn
+> ```
 
-First install the Sentence Transformers library:
+Use with `transformers`
+
+```python
+# Requires transformers>=4.48.0
+
+import torch.nn.functional as F
+from transformers import AutoModel, AutoTokenizer
+
+input_texts = [
+    "what is the capital of China?",
+    "how to implement quick sort in python?",
+    "Beijing",
+    "sorting algorithms"
+]
+
+model_path = "Alibaba-NLP/gte-modernbert-base"
+tokenizer = AutoTokenizer.from_pretrained(model_path)
+model = AutoModel.from_pretrained(model_path)
+
+# Tokenize the input texts
+batch_dict = tokenizer(input_texts, max_length=8192, padding=True, truncation=True, return_tensors='pt')
+
+outputs = model(**batch_dict)
+embeddings = outputs.last_hidden_state[:, 0]
+ 
+# (Optionally) normalize embeddings
+embeddings = F.normalize(embeddings, p=2, dim=1)
+scores = (embeddings[:1] @ embeddings[1:].T) * 100
+print(scores.tolist())
+# [[42.89073944091797, 71.30911254882812, 33.664554595947266]]
+```
+
+Use with `sentence-transformers`:
+
+```python
+# Requires transformers>=4.48.0
+from sentence_transformers import SentenceTransformer
+from sentence_transformers.util import cos_sim
+
+input_texts = [
+    "what is the capital of China?",
+    "how to implement quick sort in python?",
+    "Beijing",
+    "sorting algorithms"
+]
+
+model = SentenceTransformer("Alibaba-NLP/gte-modernbert-base")
+embeddings = model.encode(input_texts)
+print(embeddings.shape)
+# (4, 768)
+
+similarities = cos_sim(embeddings[0], embeddings[1:])
+print(similarities)
+# tensor([[0.4289, 0.7131, 0.3366]])
+```
+
+Use with `transformers.js`:
+
+```js
+// npm i @huggingface/transformers
+import { pipeline, matmul } from "@huggingface/transformers";
+
+// Create a feature extraction pipeline
+const extractor = await pipeline(
+  "feature-extraction",
+  "Alibaba-NLP/gte-modernbert-base",
+  { dtype: "fp32" }, // Supported options: "fp32", "fp16", "q8", "q4", "q4f16"
+);
+
+// Embed queries and documents
+const embeddings = await extractor(
+  [
+    "what is the capital of China?",
+    "how to implement quick sort in python?",
+    "Beijing",
+    "sorting algorithms",
+  ],
+  { pooling: "cls", normalize: true },
+);
+
+// Compute similarity scores
+const similarities = (await matmul(embeddings.slice([0, 1]), embeddings.slice([1, null]).transpose(1, 0))).mul(100);
+console.log(similarities.tolist()); // [[42.89077377319336, 71.30916595458984, 33.66455841064453]]
+```
+
+Additionally, you can also deploy `Alibaba-NLP/gte-modernbert-base` with [Text Embeddings Inference (TEI)](https://github.com/huggingface/text-embeddings-inference) as follows:
+
+- CPU
 
 ```bash
-pip install -U sentence-transformers
+docker run --platform linux/amd64 \
+  -p 8080:80 \
+  -v $PWD/data:/data \
+  --pull always \
+  ghcr.io/huggingface/text-embeddings-inference:cpu-1.7 \
+  --model-id Alibaba-NLP/gte-modernbert-base
 ```
-Then you can load this model and run inference.
-```python
-from sentence_transformers import SentenceTransformer
 
-# Download from the 🤗 Hub
-model = SentenceTransformer("sentence_transformers_model_id")
-# Run inference
-sentences = [
-    'What happens if the total delayed amount exceeds $125,000,000?',
-    'Annex C 2024 Commitment Schedule Amount of 2024 Incremental Delayed Amount of 2024 Term Draw Term Loan Amount of 2024 Revolving Name of Lender Loan Commitment Commitment Credit Commitment Letter of Credit Sublimit Bank of America, $28,546,712.81 $36,764,705.89 N.A. $34,688,581.30 $7,937,716.26 PNC Bank, $21,410,034.60 $27,573,529.41 National Association $26,016,435.99 $5,203,287.20 MUFG Bank, $21,410,034.60 $27,573,529.41 LTD $26,016,435.99 $5,203,287.20 TD Bank, N.A. $9,991,349.48 $12,867,647.06 $12,141,003.46 $2,428,200.69 Synovus Bank $9,991,349.48 $12,867,647.06 $12,141,003.46 $2,428,200.69 Raymond James $2,854,671.28 $3,676,470.59 Bank $3,468,858.13 $693,771.63 Goldman Sachs $0.00 $0.00 Bank USA $5,000,000.00 $0.00 Barclays Bank $2,941,176.47 $0.00 PLC $2,058,823.53 $411,764.71 Citibank, N.A. $1,427,335.64 $1,838,235.29 $1,734,429.07 $346,885.81 Jefferies Finance $1,427,335.64 $1,838,235.29 LLC $1,734,429.07 $346,885.81 Total: $100,000,000.00 $125,000,000.00 $125,000,000.00 $25,000,000.00',
-    'BARCLAYS BANK PLC, as a 2024 Lender and an Issuing Bank By: _/s/ Ritam Bhalla Name: Ritam Bhalla Title: Director [Signature Page to Amendment No. 2 to Credit Agreement] WEIL:\\99400949\\10\\45453.0004\n\nCITIBANK, N.A., as a 2024 Lender and an Issuing Bank By: _/s/ Karan Kapoor Name: Karan Kapoor Title: Vice President [Signature Page to Amendment No. 2 to Credit Agreement] WEIL:\\99400949\\10\\45453.0004\n\nJEFFERIES FINANCE LLC, as a 2024 Lender and an Issuing Bank By: _/s/ Jonathan Ciuffreda Name: Jonathan Ciuffreda Title: Managing Director [Signature Page to Amendment No. 2 to Credit Agreement] WEIL:\\99400949\\10\\45453.0004\n\nSchedule I 2024 Commitment Schedule 2024 Incremental Delayed 2024 Replacement 2024 Incremental 2024 Replacement Term Draw Term Loan Revolving Credit Revolving Credit Name of Lender Loan Commitment Commitment Commitment Commitment Bank of America, $28,546,712.81 $36,764,705.89 $20,813,148.78 $13,875,432.52 N.A. PNC Bank, $21,410,034.60 $27,573,529.41 $15,609,861.59 $10,406,574.40 National Association MUFG Bank, $21,410,034.60 $27,573,529.41 $15,609,861.59 $10,406,574.40 LTD TD Bank, N.A. $9,991,349.48 $12,867,647.06 $7,284,602.08 $4,856,401.38 Synovus Bank $9,991,349.48 $12,867,647.06 $7,284,602.08 $4,856,401.38 Raymond James $2,854,671.28 $3,676,470.59 $2,081,314.88 $1,387,543.25 Bank Goldman Sachs $0.00 $0.00 $3,000,000.00 $2,000,000.00 Bank USA Barclays Bank $2,941,176.47 $0.00 $1,235,294.12 $823,529.41 PLC Citibank, N.A. $1,427,335.64 $1,838,235.29 $1,040,657.44 $693,771.63 Jefferies Finance $1,427,335.64 $1,838,235.29 $1,040,657.44 $693,771.63\n Total: $100,000,000.00 $125,000,000.00 $75,000,000.00 $50,000,000.00\n\nAnnex A\n [see attached]\n\nPublished Deal CUSIP Number: 30322UAA9 Published Revolver CUSIP Number: 30322UA D3 Published Term Loan A CUSIP Number: 30322UA E1 Published Delayed Draw Term Loan CUSIP Number: 30322UAF8\n dated as of October 6, 2021, as amended by Amendment No. 1, dated as of February 24, 2023, as amended by Amendment No. 2, dated as of January 5, 2024, among FWR HOLDING CORPORATION, as the Borrower, AI FRESH PARENT, INC., as Holdings, THE FINANCIAL INSTITUTIONS PARTY HERETO, as Lenders and Issuing Banks, and BANK OF AMERICA, N.A., as Administrative Agent, an Issuing Bank and Swingline Lender, BOFA SECURITIES, INC., MUFG BANK, LTD. and PNC BANK CAPITAL MARKETS LLC as Joint Lead Arrangers and Joint Bookrunners, MUFG BANK, LTD. and PNC BANK, NATIONAL ASSOCIATION as Syndication Agents, and TD BANK, N.A. and SYNOVUS BANK, as Co-Documentation Agents',
-]
-embeddings = model.encode(sentences)
-print(embeddings.shape)
-# [3, 768]
+- GPU
 
-# Get the similarity scores for the embeddings
-similarities = model.similarity(embeddings, embeddings)
-print(similarities)
-# tensor([[nan, nan, nan],
-#         [nan, nan, nan],
-#         [nan, nan, nan]], dtype=torch.float16)
+```bash
+docker run --gpus all \
+  -p 8080:80 \
+  -v $PWD/data:/data \
+  --pull always \
+  ghcr.io/huggingface/text-embeddings-inference:1.7 \
+  --model-id Alibaba-NLP/gte-modernbert-base
 ```
-<!--
-### Direct Usage (Transformers)
 
-<details><summary>Click to see the direct usage in Transformers</summary>
+Then you can send requests to the deployed API via the OpenAI-compatible `v1/embeddings` route (more information about the [OpenAI Embeddings API](https://platform.openai.com/docs/api-reference/embeddings)):
 
-</details>
--->
-
-<!--
-### Downstream Usage (Sentence Transformers)
-
-You can finetune this model on your own dataset.
-
-<details><summary>Click to expand</summary>
-
-</details>
--->
-
-<!--
-### Out-of-Scope Use
-
-*List how the model may foreseeably be misused and address what users ought not to do with the model.*
--->
-
-<!--
-## Bias, Risks and Limitations
-
-*What are the known or foreseeable issues stemming from this model? You could also flag here known failure cases or weaknesses of the model.*
--->
-
-<!--
-### Recommendations
-
-*What are recommendations with respect to the foreseeable issues? For example, filtering explicit content.*
--->
+```bash
+curl https://0.0.0.0:8080/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": [
+      "what is the capital of China?",
+      "how to implement quick sort in python?",
+      "Beijing",
+      "sorting algorithms"
+    ],
+    "model": "Alibaba-NLP/gte-modernbert-base",
+    "encoding_format": "float"
+  }'
+```
 
 ## Training Details
 
-### Training Dataset
+The `gte-modernbert` series of models follows the training scheme of the previous [GTE models](https://huggingface.co/collections/Alibaba-NLP/gte-models-6680f0b13f885cb431e6d469), with the only difference being that the pre-training language model base has been replaced from [GTE-MLM](https://huggingface.co/Alibaba-NLP/gte-en-mlm-base) to [ModernBert](https://huggingface.co/answerdotai/ModernBERT-base). For more training details, please refer to our paper: [mGTE: Generalized Long-Context Text Representation and Reranking Models for Multilingual Text Retrieval](https://aclanthology.org/2024.emnlp-industry.103/)
 
-#### Unnamed Dataset
+## Evaluation
 
-* Size: 7,961 training samples
-* Columns: <code>sentence_0</code>, <code>sentence_1</code>, and <code>sentence_2</code>
-* Approximate statistics based on the first 1000 samples:
-  |         | sentence_0                                                                        | sentence_1                                                                           | sentence_2                                                                           |
-  |:--------|:----------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------|
-  | type    | string                                                                            | string                                                                               | string                                                                               |
-  | details | <ul><li>min: 4 tokens</li><li>mean: 14.76 tokens</li><li>max: 36 tokens</li></ul> | <ul><li>min: 40 tokens</li><li>mean: 374.34 tokens</li><li>max: 987 tokens</li></ul> | <ul><li>min: 34 tokens</li><li>mean: 413.95 tokens</li><li>max: 987 tokens</li></ul> |
-* Samples:
-  | sentence_0                                                                                    | sentence_1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | sentence_2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-  |:----------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-  | <code>How can the Borrower Agent satisfy the obligations described here?</code>               | <code> (i) Notwithstanding anything to the contrary in this Section 6.09, (x) the Borrowers shall be deemed to have complied with the terms of Sections 6.09(a) and (b), as applicable, if the Borrower Agent delivers to the Agent, within the same time frame required under the Securities Act and the rules and regulations of the SEC (including any extension permitted by Rule 12b-25 thereunder) the Parent's annual report on Form 10-K for the applicable fiscal year or its quarterly report on Form 10-Q for the applicable fiscal quarter, respectively, that the Parent has filed with the SEC and to the extent such information is in lieu of information required to be provided under Section 6.09(a), such materials are accompanied by a report and opinion of the Auditors or another independent public accounting firm of nationally recognized standing, which report and opinion shall be prepared in accordance with generally accepted auditing standards, without any qualification related to going concern (othe...</code> | <code>"Defaulting Lender" means any Person that has (a) defaulted in (or is otherwise unable to perform) its obligations under this Agreement, including its obligations, (x) to make a Loan within two Business Days of the date required to be made by it hereunder or (y) to fund its participation in a Letter of Credit or Swingline Loan required to be funded by it hereunder within two Business Days of the date such obligation arose or such Loan or Letter of Credit or Swingline Loan was required to be made or funded, unless, in the case of subclause (x) above, such Person notifies the Administrative Agent in writing that such failure is the result of such Person's good faith determination that a condition precedent to funding (specifically identified and including the particular default, if any) has not been satisfied, (b) notified the Administrative Agent, any Issuing Bank or the Swingline Lender or the Borrower in writing that it does not intend to satisfy or perform any such obligation or has ...</code> |
-  | <code>Consequences of a bail-in action for liabilities owed by a financial institution</code> | <code>document pursuant to the preceding sentence of this Section 9.22 shall be without recourse to or warranty by the Administrative Agent (other than as to the Administrative Agent's authority to execute and deliver such documents).
-   SECTION 23. Acknowledgement and Consent to Bail-In of Affected Financial Institutions. Notwithstanding anything to the contrary in any Loan Document or in any other agreement, arrangement or understanding of the parties hereto, each such party acknowledges that any liability of any Affected Financial Institution arising under any Loan Document, to the extent such liability is unsecured, may be subject to the Write-Down and Conversion Powers of the applicable Resolution Authority and agrees and consents to, and acknowledges and agrees to be bound by:
+### MTEB
 
-   (a) the application of any Write-Down and Conversion Powers by the applicable Resolution Authority to any such liabilities arising hereunder which may be payable to it by any party hereto that is an Affected Fina...</code> | <code>"Write-Down and Conversion Powers" means (i) with respect to any EEA Resolution Authority, the write-down and conversion powers of such EEA Resolution Authority from time to time under the Bail-In Legislation for the applicable EEA Member Country, which write-down and conversion powers are described in the EU Bail-In Legislation Schedule and (ii) with respect to the United Kingdom, any powers of the applicable Resolution Authority under the Bail-In Legislation to cancel, reduce, modify or change the form of a liability of any UK Financial Institution or any contract or instrument under which that liability arises, to convert all or part of that liability into shares, securities or obligations of that person or any other person, to provide that any such contract or instrument is to have effect as if a right had been exercised under it or to suspend any obligation in respect of that liability or any of the powers under that Bail-In Legislation that are related to or ancillary to any of t...</code> |
-  | <code>Can the Borrower impose requirements for extensions?</code>                             | <code> (x) any documentation in respect of any Extension shall be consistent with the foregoing; and (xi) no Extension of any Revolving Facility shall be effective as to the obligations of the Swingline Lender to make any Swingline Loan or any Issuing Bank with respect to Letters of Credit without the consent of the Swingline Lender or such Issuing Bank (such consents not to be unreasonably withheld or delayed) (and, in the absence of such consent, all references herein to Latest Revolving Credit Maturity Date shall be determined, when used in reference to the Swingline Lender or such Issuing Bank, as applicable, without giving effect to such Extension).
-   (b) (i) No Extension consummated in reliance on this Section 2.23 shall constitute a voluntary or mandatory prepayment for purposes of Section 2.11, (ii) the scheduled amortization payments (insofar as such schedule affects payments due to Lenders participating in the relevant Class) set forth in Section 2.10 shall be adjusted to give effec...</code> | <code>From the Closing Date until the Termination Date, the Borrower (and, solely in the case of Section 6.09, Holdings) covenants and agrees with the Lenders, the Issuing Banks and the Administrative Agent that:
-   SECTION 1. Indebtedness. The Borrower shall not, nor shall it permit any of its Restricted Subsidiaries to create, incur, assume or otherwise become or remain liable with respect to any Indebtedness, except:
+The results of other models are retrieved from [MTEB leaderboard](https://huggingface.co/spaces/mteb/leaderboard). Given that all models in the `gte-modernbert` series have a size of less than 1B parameters, we focused exclusively on the results of models under 1B from the MTEB leaderboard.
 
-   (a) the Secured Obligations;
+|                                            Model Name                                            | Param Size (M) | Dimension | Sequence Length | Average (56) | Class. (12) | Clust. (11) | Pair Class. (3) | Reran. (4) | Retr. (15) |  STS (10)   | Summ. (1) |
+|:------------------------------------------------------------------------------------------------:|:--------------:|:---------:|:---------------:|:------------:|:-----------:|:---:|:---:|:---:|:---:|:-----------:|:--------:|
+|        [mxbai-embed-large-v1](https://huggingface.co/mixedbread-ai/mxbai-embed-large-v1)         |      335       |   1024    |       512       |    64.68     |    75.64    | 46.71 | 87.2 | 60.11 | 54.39 |     85      |   32.71  |
+| [multilingual-e5-large-instruct](https://huggingface.co/intfloat/multilingual-e5-large-instruct) |      560       |   1024    |       514       |    64.41     |    77.56    | 47.1 | 86.19 | 58.58 | 52.47 |    84.78    |   30.39  |
+|                [bge-large-en-v1.5](https://huggingface.co/BAAI/bge-large-en-v1.5)                |      335       |   1024    |       512       |    64.23     |    75.97    | 46.08 | 87.12 | 60.03 | 54.29 |    83.11    |   31.61  |
+|             [gte-base-en-v1.5](https://huggingface.co/Alibaba-NLP/gte-base-en-v1.5)              |      137       |    768    |      8192       |  64.11   |    77.17    | 46.82 | 85.33 | 57.66 | 54.09 |    81.97    |   31.17  |
+|                 [bge-base-en-v1.5](https://huggingface.co/BAAI/bge-base-en-v1.5)                 |      109       |    768    |       512       |    63.55     |    75.53    | 45.77 | 86.55 | 58.86 | 53.25 |    82.4     |   31.07  |
+|            [gte-large-en-v1.5](https://huggingface.co/Alibaba-NLP/gte-large-en-v1.5)             |      409       |   1024    |      8192       |    65.39     |    77.75    | 47.95 | 84.63 | 58.50 | 57.91 |    81.43    |   30.91  |
+| [modernbert-embed-base](https://huggingface.co/nomic-ai/modernbert-embed-base) |      149       |    768    |      8192       |    62.62     |    74.31    | 44.98 | 83.96 | 56.42 | 52.89 |    81.78    |   31.39  |
+| [nomic-embed-text-v1.5](https://huggingface.co/nomic-ai/nomic-embed-text-v1.5) |                |    768    |      8192       |    62.28     |   	73.55    |	43.93 |	84.61 |	55.78 | 53.01|    81.94    |   30.4   |
+| [gte-multilingual-base](https://huggingface.co/Alibaba-NLP/gte-multilingual-base) |      305       |    768    |       8192      |     61.4     | 70.89 | 44.31 | 84.24 | 57.47 |51.08 |    82.11    |   30.58  | 
+| [jina-embeddings-v3](https://huggingface.co/jinaai/jina-embeddings-v3) | 572 |   1024    |      8192  |       65.51 | 82.58 |45.21 |84.01 |58.13 |53.88 | 85.81 |   29.71  | 
+| [**gte-modernbert-base**](https://huggingface.co/Alibaba-NLP/gte-modernbert-base) | 149 |   768    |      8192  |   **64.38** | **76.99** | **46.47** | **85.93** | **59.24** | **55.33** | **81.57** | **30.68** |
 
-   (b) Indebtedness of (i) the Borrower to Holdings and/or any Restricted Subsidiary and/or (ii) any Restricted Subsidiary to Holdings, the Borrower and/or any other Restricted Subsidiary; provided that (A) in the case of any Indebtedness of any Restricted Subsidiary that is not a Loan Party owing to the Borrower or any Restricted Subsidiary that is a Loan Party, the related Investment is permitted under Section 6.06, and (B) any Indebtedness of any Loan Party owing to any Restricted Subsidiary that is not a Loan Party incurred in reliance on this ...</code> |
-* Loss: [<code>MultipleNegativesRankingLoss</code>](https://sbert.net/docs/package_reference/sentence_transformer/losses.html#multiplenegativesrankingloss) with these parameters:
-  ```json
-  {
-      "scale": 20.0,
-      "similarity_fct": "cos_sim",
-      "gather_across_devices": false,
-      "directions": [
-          "query_to_doc"
-      ],
-      "partition_mode": "joint",
-      "hardness_mode": null,
-      "hardness_strength": 0.0
-  }
-  ```
 
-### Training Hyperparameters
-#### Non-Default Hyperparameters
+### LoCo (Long Document Retrieval)(NDCG@10)
 
-- `per_device_train_batch_size`: 16
-- `num_train_epochs`: 1
-- `per_device_eval_batch_size`: 16
-- `multi_dataset_batch_sampler`: round_robin
+| Model Name |  Dimension | Sequence Length | Average (5) | QsmsumRetrieval | SummScreenRetrieval | QasperAbastractRetrieval | QasperTitleRetrieval |  GovReportRetrieval |
+|:----:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| [gte-qwen1.5-7b](https://huggingface.co/Alibaba-NLP/gte-qwen1.5-7b) | 4096 | 32768 |  87.57 | 49.37 | 93.10 | 99.67 | 97.54 | 98.21 | 
+| [gte-large-v1.5](https://huggingface.co/Alibaba-NLP/gte-large-v1.5) |1024 | 8192 | 86.71 | 44.55 | 92.61 | 99.82 | 97.81 | 98.74 |
+| [gte-base-v1.5](https://huggingface.co/Alibaba-NLP/gte-base-v1.5) | 768 | 8192 | 87.44 | 49.91  | 91.78 | 99.82 | 97.13 | 98.58 |
+| [gte-modernbert-base](https://huggingface.co/Alibaba-NLP/gte-modernbert-base) | 768 | 8192 | 88.88 | 54.45 | 93.00 | 99.82 | 98.03 | 98.70 |
+| [gte-reranker-modernbert-base](https://huggingface.co/Alibaba-NLP/gte-reranker-modernbert-base) | - | 8192 | 90.68 | 70.86 | 94.06 | 99.73 | 99.11 | 89.67 | 
 
-#### All Hyperparameters
-<details><summary>Click to expand</summary>
+### COIR (Code Retrieval Task)(NDCG@10)
 
-- `per_device_train_batch_size`: 16
-- `num_train_epochs`: 1
-- `max_steps`: -1
-- `learning_rate`: 5e-05
-- `lr_scheduler_type`: linear
-- `lr_scheduler_kwargs`: None
-- `warmup_steps`: 0
-- `optim`: adamw_torch
-- `optim_args`: None
-- `weight_decay`: 0.0
-- `adam_beta1`: 0.9
-- `adam_beta2`: 0.999
-- `adam_epsilon`: 1e-08
-- `optim_target_modules`: None
-- `gradient_accumulation_steps`: 1
-- `average_tokens_across_devices`: True
-- `max_grad_norm`: 1
-- `label_smoothing_factor`: 0.0
-- `bf16`: False
-- `fp16`: False
-- `bf16_full_eval`: False
-- `fp16_full_eval`: False
-- `tf32`: None
-- `gradient_checkpointing`: False
-- `gradient_checkpointing_kwargs`: None
-- `torch_compile`: False
-- `torch_compile_backend`: None
-- `torch_compile_mode`: None
-- `use_liger_kernel`: False
-- `liger_kernel_config`: None
-- `use_cache`: False
-- `neftune_noise_alpha`: None
-- `torch_empty_cache_steps`: None
-- `auto_find_batch_size`: False
-- `log_on_each_node`: True
-- `logging_nan_inf_filter`: True
-- `include_num_input_tokens_seen`: no
-- `log_level`: passive
-- `log_level_replica`: warning
-- `disable_tqdm`: False
-- `project`: huggingface
-- `trackio_space_id`: trackio
-- `eval_strategy`: no
-- `per_device_eval_batch_size`: 16
-- `prediction_loss_only`: True
-- `eval_on_start`: False
-- `eval_do_concat_batches`: True
-- `eval_use_gather_object`: False
-- `eval_accumulation_steps`: None
-- `include_for_metrics`: []
-- `batch_eval_metrics`: False
-- `save_only_model`: False
-- `save_on_each_node`: False
-- `enable_jit_checkpoint`: False
-- `push_to_hub`: False
-- `hub_private_repo`: None
-- `hub_model_id`: None
-- `hub_strategy`: every_save
-- `hub_always_push`: False
-- `hub_revision`: None
-- `load_best_model_at_end`: False
-- `ignore_data_skip`: False
-- `restore_callback_states_from_checkpoint`: False
-- `full_determinism`: False
-- `seed`: 42
-- `data_seed`: None
-- `use_cpu`: False
-- `accelerator_config`: {'split_batches': False, 'dispatch_batches': None, 'even_batches': True, 'use_seedable_sampler': True, 'non_blocking': False, 'gradient_accumulation_kwargs': None}
-- `parallelism_config`: None
-- `dataloader_drop_last`: False
-- `dataloader_num_workers`: 0
-- `dataloader_pin_memory`: True
-- `dataloader_persistent_workers`: False
-- `dataloader_prefetch_factor`: None
-- `remove_unused_columns`: True
-- `label_names`: None
-- `train_sampling_strategy`: random
-- `length_column_name`: length
-- `ddp_find_unused_parameters`: None
-- `ddp_bucket_cap_mb`: None
-- `ddp_broadcast_buffers`: False
-- `ddp_backend`: None
-- `ddp_timeout`: 1800
-- `fsdp`: []
-- `fsdp_config`: {'min_num_params': 0, 'xla': False, 'xla_fsdp_v2': False, 'xla_fsdp_grad_ckpt': False}
-- `deepspeed`: None
-- `debug`: []
-- `skip_memory_metrics`: True
-- `do_predict`: False
-- `resume_from_checkpoint`: None
-- `warmup_ratio`: None
-- `local_rank`: -1
-- `prompts`: None
-- `batch_sampler`: batch_sampler
-- `multi_dataset_batch_sampler`: round_robin
-- `router_mapping`: {}
-- `learning_rate_mapping`: {}
+| Model Name | Dimension | Sequence Length | Average(20) | CodeSearchNet-ccr-go | CodeSearchNet-ccr-java | CodeSearchNet-ccr-javascript | CodeSearchNet-ccr-php | CodeSearchNet-ccr-python | CodeSearchNet-ccr-ruby | CodeSearchNet-go | CodeSearchNet-java | CodeSearchNet-javascript | CodeSearchNet-php | CodeSearchNet-python | CodeSearchNet-ruby | apps | codefeedback-mt | codefeedback-st | codetrans-contest | codetrans-dl | cosqa | stackoverflow-qa | synthetic-text2sql |
+|:----:|:---:|:---:|:---:|:---:| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| [gte-modernbert-base](https://huggingface.co/Alibaba-NLP/gte-modernbert-base) | 768 | 8192 | 79.31	| 94.15	| 93.57 |	94.27 |	91.51	| 93.93	| 90.63	| 88.32 |	83.27	| 76.05	| 85.12	| 88.16	| 77.59	| 57.54	| 82.34	| 85.95	| 71.89	 | 35.46	| 43.47	| 91.2	| 61.87 |
+| [gte-reranker-modernbert-base](https://huggingface.co/Alibaba-NLP/gte-reranker-modernbert-base) | - | 8192 | 79.99	| 96.43	| 96.88	| 98.32 | 91.81	| 97.7	| 91.96 |	88.81	| 79.71	| 76.27	| 89.39	| 98.37	| 84.11	| 47.57	| 83.37	| 88.91	| 49.66	| 36.36	| 44.37	| 89.58	| 64.21 |
 
-</details>
+### BEIR(NDCG@10)
 
-### Training Time
-- **Training**: 10.3 minutes
+| Model Name | Dimension | Sequence Length | Average(15) | ArguAna | ClimateFEVER | CQADupstackAndroidRetrieval | DBPedia | FEVER | FiQA2018 | HotpotQA | MSMARCO | NFCorpus | NQ | QuoraRetrieval | SCIDOCS | SciFact | Touche2020 | TRECCOVID |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| [gte-modernbert-base](https://huggingface.co/Alibaba-NLP/gte-modernbert-base) | 768 | 8192 | 55.33 | 72.68 | 37.74 | 42.63 | 41.79 | 91.03 | 48.81 | 69.47 | 40.9 | 36.44 | 57.62 | 88.55 | 21.29 | 77.4 | 21.68 | 81.95 |
+| [gte-reranker-modernbert-base](https://huggingface.co/Alibaba-NLP/gte-reranker-modernbert-base) | - | 8192 | 56.73 | 69.03 | 37.79 | 44.68 | 47.23 | 94.54 | 49.81 | 78.16 | 45.38 | 30.69 | 64.57 | 87.77 | 20.60 | 73.57 | 27.36 | 79.89 |
 
-### Framework Versions
-- Python: 3.11.3
-- Sentence Transformers: 5.4.0
-- Transformers: 5.5.3
-- PyTorch: 2.5.1+cu121
-- Accelerate: 1.13.0
-- Datasets: 4.8.4
-- Tokenizers: 0.22.2
+
+
+## Hiring
+
+We have open positions for **Research Interns** and **Full-Time Researchers** to join our team at Tongyi Lab. 
+We are seeking passionate individuals with expertise in representation learning, LLM-driven information retrieval, Retrieval-Augmented Generation (RAG), and agent-based systems. 
+Our team is located in the vibrant cities of **Beijing** and **Hangzhou**.
+If you are driven by curiosity and eager to make a meaningful impact through your work, we would love to hear from you. Please submit your resume along with a brief introduction to <a href="mailto:dingkun.ldk@alibaba-inc.com">dingkun.ldk@alibaba-inc.com</a>.
+
 
 ## Citation
 
-### BibTeX
+If you find our paper or models helpful, feel free to give us a cite.
 
-#### Sentence Transformers
-```bibtex
-@inproceedings{reimers-2019-sentence-bert,
-    title = "Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks",
-    author = "Reimers, Nils and Gurevych, Iryna",
-    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing",
-    month = "11",
-    year = "2019",
-    publisher = "Association for Computational Linguistics",
-    url = "https://arxiv.org/abs/1908.10084",
+```
+@inproceedings{zhang2024mgte,
+  title={mGTE: Generalized Long-Context Text Representation and Reranking Models for Multilingual Text Retrieval},
+  author={Zhang, Xin and Zhang, Yanzhao and Long, Dingkun and Xie, Wen and Dai, Ziqi and Tang, Jialong and Lin, Huan and Yang, Baosong and Xie, Pengjun and Huang, Fei and others},
+  booktitle={Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing: Industry Track},
+  pages={1393--1412},
+  year={2024}
+}
+
+@article{li2023towards,
+  title={Towards general text embeddings with multi-stage contrastive learning},
+  author={Li, Zehan and Zhang, Xin and Zhang, Yanzhao and Long, Dingkun and Xie, Pengjun and Zhang, Meishan},
+  journal={arXiv preprint arXiv:2308.03281},
+  year={2023}
 }
 ```
-
-#### MultipleNegativesRankingLoss
-```bibtex
-@misc{oord2019representationlearningcontrastivepredictive,
-      title={Representation Learning with Contrastive Predictive Coding},
-      author={Aaron van den Oord and Yazhe Li and Oriol Vinyals},
-      year={2019},
-      eprint={1807.03748},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/1807.03748},
-}
-```
-
-<!--
-## Glossary
-
-*Clearly define terms in order to be accessible across audiences.*
--->
-
-<!--
-## Model Card Authors
-
-*Lists the people who create the model card, providing recognition and accountability for the detailed work that goes into its construction.*
--->
-
-<!--
-## Model Card Contact
-
-*Provides a way for people who have updates to the Model Card, suggestions, or questions, to contact the Model Card authors.*
--->

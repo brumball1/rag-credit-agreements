@@ -1,8 +1,8 @@
 {
   "__version__": {
     "pytorch": "2.5.1+cu121",
-    "sentence_transformers": "5.4.0",
-    "transformers": "5.5.3"
+    "sentence_transformers": "5.4.1",
+    "transformers": "5.5.4"
   },
   "default_prompt_name": null,
   "model_type": "SentenceTransformer",
