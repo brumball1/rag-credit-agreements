@@ -1,178 +1,184 @@
 # RAG for Credit Agreements
 
-Fine-tuning embedding models on credit agreement documents using LLM-generated training triplets and Multiple Negatives Ranking Loss (MNRL), evaluated with leave-one-document-out cross-validation across five credit agreements.
+This repository contains the code, cached data, trained fold outputs and final-report figures for a project on improving Retrieval-Augmented Generation (RAG) over long credit agreements.
 
----
+The project asks whether statistical-mechanics diagnostics and locally generated synthetic supervision can improve legal-document retrieval while reducing reliance on large downstream context windows. The final pipeline uses section-aware chunking, Gemma3-12B synthetic query generation, hybrid dense/BM25 hard negatives, and E5-base-v2 fine-tuning with Multiple Negatives Ranking Loss (MNRL).
 
-## Results
+## Headline Results
 
-### E5-base-v2 — Section Chunks (5-fold average)
+Five credit agreements were evaluated with leave-one-document-out cross-validation. E5-base-v2 was compared before and after fine-tuning on section-aware hybrid triplets.
 
-| Metric | Base Model | Fine-Tuned |
-|--------|-----------|------------|
-| Recall@10 | 0.638 | **0.797** |
-| Recall@1 | 0.265 | 0.327 |
-| MRR | 0.387 | 0.481 |
-| Mean rank | 45.96 | 14.84 |
+| Metric | Base E5 | Fine-tuned E5 | Change |
+|---|---:|---:|---:|
+| Recall@10 | 0.637 +/- 0.040 | 0.797 +/- 0.027 | +0.160 |
+| Recall@5 | 0.528 +/- 0.037 | 0.680 +/- 0.032 | +0.152 |
+| Recall@1 | 0.265 +/- 0.029 | 0.331 +/- 0.015 | +0.066 |
+| MRR | 0.387 +/- 0.031 | 0.483 +/- 0.016 | +0.096 |
+| Mean rank | 45.96 +/- 10.47 | 14.77 +/- 3.15 | -31.19 |
 
-Per-fold test results:
+At the MNRL operating point, tau = 0.05:
 
-| Fold | Triplets | Base Recall@10 | Fine-Tuned Recall@10 |
-|------|----------|---------------|---------------------|
-| 1 | 2,200 | 0.6209 | 0.7982 |
-| 2 | 1,744 | 0.6422 | 0.7741 |
-| 3 | 3,800 | 0.6037 | 0.7763 |
-| 4 | 1,608 | 0.7027 | 0.8420 |
-| 5 | 3,168 | 0.6130 | 0.7929 |
+| Diagnostic | Base E5 | Fine-tuned E5 |
+|---|---:|---:|
+| Retrieval entropy | 10.49 bits | 4.75 bits |
+| Top-5 probability mass | 0.013 | 0.589 |
+| Top-10 probability mass | 0.023 | 0.687 |
 
-Training: MNRL loss, batch size 16, lr 2e-5, patience=3, early stopped at ~5 epochs.
+For an 80% recall target, the estimated context requirement fell from about 35 chunks, or 9,900 tokens, to about 11 chunks, or 3,080 tokens. This is a roughly 68% reduction in required context tokens.
 
----
+## Corpus and Training Data
+
+The corpus consists of five credit agreements supplied for the project. After PDF extraction and cleaning, the report analyses 448,331 cleaned tokens. For corpus statistics, stop-word filtering and lemmatisation reduce this to 244,557 tokens and 4,824 unique tokens. Stop words are kept for triplet generation, negative mining and model fine-tuning because E5 was pre-trained on natural text.
+
+| Dataset artifact | Count | Notes |
+|---|---:|---|
+| `paragraph_chunks.jsonl` | 2,137 chunks | Original paragraph strategy; many chunks exceeded E5's 512-token limit. |
+| `section_chunks.jsonl` | 1,582 chunks | Section-aware chunks used for the final E5 results. |
+| Section chunks used for query generation | 1,565 chunks | 17 very short chunks removed before synthetic-query generation. |
+| Synthetic query-positive pairs | 6,260 pairs | Four Gemma3-12B queries per retained section chunk. |
+| Final E5 section-aware triplets | 12,520 triplets | One dense hard negative and one BM25 hard negative per query-positive pair. |
+
+Corpus statistics reported in the final write-up:
+
+| Statistic | Value |
+|---|---:|
+| Zipf alpha, raw top-500 tokens | 0.995, R^2 = 0.996 |
+| Zipf alpha, lemmatised/filtered top-500 tokens | 0.805, R^2 = 0.975 |
+| Heaps law | V(N) = 84.70 N^0.327, R^2 = 0.984 |
+| Mean section entropy | 6.015 bits per word |
+| Median section entropy | 6.208 bits per word |
+| Section entropy standard deviation | 0.735 bits per word |
+
+## Method Summary
+
+The final report follows this pipeline:
+
+1. Extract and clean text from five PDF credit agreements using `pdfplumber`.
+2. Split documents using section-aware chunking with a 512-token cap.
+3. Generate four local synthetic queries per retained section chunk using Gemma3-12B via Ollama.
+4. Mine hard negatives using dense E5 retrieval and BM25, combined through a hybrid strategy.
+5. Build five leave-one-document-out folds.
+6. Fine-tune E5-base-v2 with MNRL, batch size 16, learning rate 2e-5, MNRL scale 20.0 and early-stop patience 3.
+7. Evaluate retrieval metrics and thermodynamic diagnostics on the held-out agreement in each fold.
+
+GTE-ModernBERT-base was tested as an auxiliary model because of its longer context length, but only fold 1 was fine-tuned/evaluated due to time constraints. It is not treated as a five-fold comparison.
+
+## Per-Fold E5 Results
+
+| Fold | Test triplets | Base R@10 | Fine-tuned R@10 | Base MRR | Fine-tuned MRR | Fine-tuned mean rank |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 2,200 | 0.621 | 0.798 | 0.377 | 0.491 | 14.9 |
+| 2 | 1,744 | 0.642 | 0.774 | 0.393 | 0.468 | 16.7 |
+| 3 | 3,800 | 0.604 | 0.776 | 0.359 | 0.467 | 17.5 |
+| 4 | 1,608 | 0.703 | 0.842 | 0.437 | 0.506 | 9.5 |
+| 5 | 3,168 | 0.613 | 0.793 | 0.369 | 0.485 | 15.3 |
+
+Query-level rank movement after fine-tuning:
+
+| Category | Count |
+|---|---:|
+| Total queries | 12,520 |
+| Improved | 6,856 |
+| Unchanged | 3,052 |
+| Worsened | 2,612 |
+| Median rank improvement | +1 |
+| Mean rank improvement | +30.7 |
+| Largest improvement | +1,428 ranks |
+| Largest worsening | -571 ranks |
+
+## Final Report Figures
+
+The `final_report_figures/` directory contains plots used in the final report, plus small cached data tables needed to regenerate them. Figure filenames are numbered in final-report order.
+
+| Script | Figures generated |
+|---|---|
+| `final_report_figures/corpus_structure.py` | `fig01_zipf_law`, `fig02_heaps_law`, `fig03_entropy_distribution`, `fig04_mean_entropy_profile` |
+| `final_report_figures/e5_before_after.py` | `fig05_e5_main_performance_summary`, `fig06_e5_fold_consistency`, `fig07_e5_margin_sharpening`, `fig08_e5_query_rank_improvement_waterfall`, `fig09_e5_thermodynamic_diagnostics`, `fig10_e5_similarity_separation`, `fig11_e5_context_tokens_for_target_recall` |
+| `final_report_figures/appendix_support.py` | `fig12_chunk_length_comparison`, `fig13_top_word_frequency_comparison` |
+
+Regenerate the final-report figures:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 final_report_figures/corpus_structure.py
+PYTHONDONTWRITEBYTECODE=1 python3 final_report_figures/e5_before_after.py
+PYTHONDONTWRITEBYTECODE=1 python3 final_report_figures/appendix_support.py
+```
+
+Each figure is saved as both `.png` and `.pdf`.
 
 ## Setup
 
-**Clone the repo**
+Clone the repo:
+
 ```bash
 git clone https://github.com/brumball1/rag-credit-agreements
 cd rag-credit-agreements
 ```
 
-**Pull cached training data (requires git-lfs)**
+Pull cached training data, if using Git LFS:
 
-Mac:
 ```bash
-brew install git-lfs
-git lfs install && git lfs pull
-```
-
-Linux:
-```bash
-sudo apt install git-lfs
-git lfs install && git lfs pull
-```
-
-Windows — download git-lfs from https://git-lfs.com, then:
-```powershell
 git lfs install
 git lfs pull
 ```
 
-**Create a virtual environment and install dependencies**
+Create a virtual environment and install dependencies:
 
-Mac / Linux:
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Windows:
+On Windows:
+
 ```powershell
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
----
+## Reproducing the Pipeline
 
-## Datasets
-
-After cloning and pulling LFS, `data/derived/` contains:
-
-| File | Description |
-|------|-------------|
-| `paragraph_chunks.jsonl` | Paragraph-level chunks (original chunking strategy) |
-| `section_chunks.jsonl` | Section-aware chunks (improved chunking strategy, 1,582 chunks) |
-| `pairs_cache__gemma3-12b__allchunks.jsonl` | LLM-generated positive query pairs for paragraph chunks |
-| `pairs_cache__gemma3-12b__section_chunks__all__4q.jsonl` | LLM-generated positive query pairs for section chunks (4 queries per chunk) |
-| `triplets__gemma3-12b__e5-base-v2__allchunks__window2-15.jsonl` | Triplets: e5 + paragraph chunks + window negatives (6,686 triplets) |
-| `triplets__gemma3-12b__e5-base-v2__section_chunks__all__dense__bm25__window3-20.jsonl` | Triplets: e5 + section chunks + hybrid negatives (12,520 triplets) |
-| `triplets__gemma3-12b__gte-modernbert-base__allchunks__window2-15.jsonl` | Triplets: GTE + paragraph chunks + window negatives (6,686 triplets) |
-| `triplets__gemma3-12b__gte-modernbert-base__section_chunks__all__dense__bm25__window3-20.jsonl` | Triplets: GTE + section chunks + hybrid negatives (12,520 triplets) |
-
-You do not need to re-run LLM query generation — the pairs caches are pre-computed. Start from step 3 (build triplets) or step 4 (create folds) if triplets already exist.
-
----
-
-## Pipeline
+The cached pairs and triplets are already present under `data/derived/`, so the full local LLM generation step does not need to be repeated for normal use.
 
 ### 1. Build Triplets
 
-Generates hard negatives for the cached positive pairs. The negative mining strategy is set via command line:
+Section chunks with hybrid dense/BM25 negatives:
 
 ```bash
-# Section chunks with hybrid negatives (recommended)
-python -m src.training.build_training_triplets \
+python3 -m src.training.build_training_triplets \
   --chunks data/derived/section_chunks.jsonl \
   --pairs data/derived/pairs_cache__gemma3-12b__section_chunks__all__4q.jsonl \
   --strategy dense_bm25_window \
   --window_min 3 --window_max 20
+```
 
-# Paragraph chunks with window negatives (original strategy)
-python -m src.training.build_training_triplets \
+Paragraph chunks with the original window-negative strategy:
+
+```bash
+python3 -m src.training.build_training_triplets \
   --chunks data/derived/paragraph_chunks.jsonl \
   --pairs data/derived/pairs_cache__gemma3-12b__allchunks.jsonl \
   --strategy window \
   --window_min 2 --window_max 15
 ```
 
-Output is saved to `data/derived/triplets__<generator>__<model>__<chunks>__<strategy>.jsonl`.
-
----
-
-### 2. Evaluate Triplets (optional)
-
-Check triplet quality before training — MRR, Recall@1/5/10, and margin stats across all triplet files:
+### 2. Create Folds
 
 ```bash
-python -m src.training.evaluate_pairs
-```
-
----
-
-### 3. Create Folds
-
-Leave-one-document-out cross-validation. Each fold holds out one credit agreement as the test set. The train/val split is done at chunk level to prevent data leakage (a chunk either goes entirely to train or entirely to val).
-
-```bash
-# Section chunks (recommended)
-python -m src.training.create_folds \
+python3 -m src.training.create_folds \
   data/derived/triplets__gemma3-12b__e5-base-v2__section_chunks__all__dense__bm25__window3-20.jsonl \
   --chunks data/derived/section_chunks.jsonl
-
-# Paragraph chunks
-python -m src.training.create_folds \
-  data/derived/triplets__gemma3-12b__e5-base-v2__allchunks__window2-15.jsonl \
-  --chunks data/derived/paragraph_chunks.jsonl
 ```
 
-Creates `data/derived/training/<dataset>/fold_1/` through `fold_5/`, each containing `train.jsonl`, `val.jsonl`, `test.jsonl`.
+This creates `data/derived/training/<dataset>/fold_1/` through `fold_5/`, each with `train.jsonl`, `val.jsonl`, and `test.jsonl`.
 
----
+### 3. Train E5
 
-### 4. Train
-
-Trains with MNRL. Evaluates Recall@10 on the val set after each epoch and stops early if no improvement for 3 consecutive epochs.
-
-**E5-base-v2 (section chunks):**
-
-Windows:
-```powershell
-foreach ($fold in 1..5) {
-    .\.venv\Scripts\python.exe -m src.training.train_model `
-      "data/derived/training/gemma3-12b__e5-base-v2__section_chunks__all__dense__bm25__window3-20/fold_$fold" `
-      --corpus_path data/derived/section_chunks.jsonl `
-      --model_name intfloat/e5-base-v2 `
-      --loss multiple_negatives_ranking `
-      --batch_size 16 `
-      --learning_rate 2e-5
-}
-```
-
-Mac / Linux:
 ```bash
 for fold in 1 2 3 4 5; do
-  caffeinate python -m src.training.train_model \
+  python3 -m src.training.train_model \
     data/derived/training/gemma3-12b__e5-base-v2__section_chunks__all__dense__bm25__window3-20/fold_$fold \
     --corpus_path data/derived/section_chunks.jsonl \
     --model_name intfloat/e5-base-v2 \
@@ -182,75 +188,36 @@ for fold in 1 2 3 4 5; do
 done
 ```
 
-**GTE-ModernBERT-base (section chunks)** — use a lower learning rate to prevent gradient explosion:
-
-Windows:
-```powershell
-foreach ($fold in 1..5) {
-    .\.venv\Scripts\python.exe -m src.training.train_model `
-      "data/derived/training/gemma3-12b__gte-modernbert-base__section_chunks__all__dense__bm25__window3-20/fold_$fold" `
-      --corpus_path data/derived/section_chunks.jsonl `
-      --model_name Alibaba-NLP/gte-modernbert-base `
-      --loss multiple_negatives_ranking `
-      --batch_size 16 `
-      --learning_rate 5e-6 `
-      --max_grad_norm 1.0
-}
-```
-
-Other options:
-```
---loss triplet              # use triplet loss instead of MNRL
---batch_size 8              # reduce if GPU runs out of memory
---max_epochs 100            # default
---patience 3                # epochs without improvement before stopping
-```
-
 The best checkpoint is saved to `fold_N/weights_multiple_negatives_ranking_best/`.
 
----
-
-### 5. Test
-
-Compares base model vs fine-tuned on the held-out test set:
+### 4. Test a Fold
 
 ```bash
-python -m src.training.test_fine_tuned \
+python3 -m src.training.test_fine_tuned \
   data/derived/training/gemma3-12b__e5-base-v2__section_chunks__all__dense__bm25__window3-20/fold_1 \
   --chunks data/derived/section_chunks.jsonl \
   --base_model intfloat/e5-base-v2
 ```
 
-For GTE:
-```bash
-python -m src.training.test_fine_tuned \
-  data/derived/training/gemma3-12b__gte-modernbert-base__section_chunks__all__dense__bm25__window3-20/fold_1 \
-  --chunks data/derived/section_chunks.jsonl \
-  --base_model Alibaba-NLP/gte-modernbert-base
-```
-
----
-
 ## Project Structure
 
-```
+```text
 src/
-  extract/    # PDF parsing and section-aware chunking
-  training/   # triplet generation, fold creation, training, evaluation
-  rag/        # embedding + retrieval
-  stats/      # word frequency, ngrams, plotting
+  extract/              PDF parsing, cleaning, and chunking
+  training/             triplet generation, fold creation, training, evaluation
+  rag/                  embedding and similarity helpers
+  stats/                token, word-frequency, n-gram, and plotting utilities
 data/
-  raw/        # original PDFs (not tracked)
-  derived/    # chunks, pairs cache, triplets, folds (LFS tracked)
+  raw/                  original PDFs, not tracked
+  derived/              chunks, cached pairs, triplets, folds, model outputs
 configs/
-  stopwords/  # domain-specific stopword lists for BM25
+  stopwords/            legal stop-word lists
+final_report_figures/   cleaned final-report plotting scripts and figure outputs
 ```
-
----
 
 ## Notes
 
-- **Chunking**: `section_chunks.jsonl` uses a section-aware chunker that respects article/section/sub-clause boundaries. This produces more semantically coherent chunks than paragraph splitting for legal documents.
-- **Negative mining**: Hybrid negatives (dense + BM25) produce harder negatives than window sampling alone. BM25 negatives are particularly effective for legal text with high keyword density.
-- **Data leakage**: `create_folds.py` splits at chunk level. Earlier versions split at triplet or query level, which caused inflated validation scores. The test set is always held out at document level and is unaffected by this fix.
-- **GTE gradient stability**: `Alibaba-NLP/gte-modernbert-base` is sensitive to learning rate with MNRL. Use `--learning_rate 5e-6` and `--max_grad_norm 1.0` to prevent loss collapse.
+- Section-aware chunking is the final strategy used for the reported E5 results because it preserves legal sections and enforces the 512-token E5 limit.
+- Paragraph chunking is retained as the original baseline strategy, but it regularly exceeded the E5 token limit and caused truncation.
+- Hybrid negative mining combines dense and BM25 negatives, which is useful for legal text where many clauses share the same surface vocabulary but differ semantically.
+- The five-fold E5 evaluation is the main result. GTE results are auxiliary because GTE was only fine-tuned/evaluated on fold 1.
